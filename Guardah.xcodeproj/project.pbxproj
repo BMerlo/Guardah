@@ -20,6 +20,7 @@
 		1848238922394FE70021EFD3 /* gokuAtlas.atlasc in Resources */ = {isa = PBXBuildFile; fileRef = 1848238822394FE70021EFD3 /* gokuAtlas.atlasc */; };
 		1848238B2239537F0021EFD3 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848238A2239537F0021EFD3 /* SplashScreen.swift */; };
 		1848238D223953C10021EFD3 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848238C223953C10021EFD3 /* GameOverScene.swift */; };
+		A1706E61223B1D3D003E2295 /* UI in Resources */ = {isa = PBXBuildFile; fileRef = A1706E60223B1D3D003E2295 /* UI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		1848238822394FE70021EFD3 /* gokuAtlas.atlasc */ = {isa = PBXFileReference; lastKnownFileType = folder; name = gokuAtlas.atlasc; path = Guardah/gokuAtlas.atlasc; sourceTree = "<group>"; };
 		1848238A2239537F0021EFD3 /* SplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
 		1848238C223953C10021EFD3 /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
+		A1706E60223B1D3D003E2295 /* UI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UI; path = Guardah/UI; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 		1848234222394D100021EFD3 = {
 			isa = PBXGroup;
 			children = (
+				A1706E5F223B1CCF003E2295 /* Sprites */,
 				1848238822394FE70021EFD3 /* gokuAtlas.atlasc */,
 				1848238622394F5F0021EFD3 /* krillin.atlasc */,
 				1848234D22394D100021EFD3 /* Guardah */,
@@ -121,6 +124,14 @@
 				1848236022394D110021EFD3 /* Info.plist */,
 			);
 			path = Guardah;
+			sourceTree = "<group>";
+		};
+		A1706E5F223B1CCF003E2295 /* Sprites */ = {
+			isa = PBXGroup;
+			children = (
+				A1706E60223B1D3D003E2295 /* UI */,
+			);
+			path = Sprites;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -227,6 +238,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1706E61223B1D3D003E2295 /* UI in Resources */,
 				1848235A22394D100021EFD3 /* Main.storyboard in Resources */,
 				1848238922394FE70021EFD3 /* gokuAtlas.atlasc in Resources */,
 				1848235122394D100021EFD3 /* GameScene.sks in Resources */,

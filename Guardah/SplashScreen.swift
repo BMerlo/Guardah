@@ -6,6 +6,7 @@ class SplashScreen: SKScene {
     
     //TODO: - Use this to create a menu scene
     var startButton: SKSpriteNode?
+        let screenSize: CGRect = UIScreen.main.bounds
     
     //TODO: - Add a main menu and play button
     override init(size: CGSize) {
