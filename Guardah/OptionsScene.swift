@@ -30,27 +30,33 @@ class OptionsScene: SKScene {
         background = SKSpriteNode(texture: SKTexture(imageNamed: "PlanetStart"))
         background.position = CGPoint(x: screenSize.width/2, y:screenSize.height/2)
         background.size = CGSize(width: screenSize.width, height: screenSize.height)
+        background?.zPosition = 0
         
         easyButton = SKSpriteNode(texture: SKTexture(imageNamed: "easy"))
         easyButton?.name = "easyBtn"
         easyButton?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2+80)
+        easyButton?.zPosition = 1
         
         mediumButton = SKSpriteNode(texture: SKTexture(imageNamed: "medium"))
         mediumButton?.name = "mediumBtn"
         mediumButton?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2+20)
+        mediumButton?.zPosition = 1
         
         hardButton = SKSpriteNode(texture: SKTexture(imageNamed: "hard"))
         hardButton?.name = "hardBtn"
         hardButton?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2-40)
+        hardButton?.zPosition = 1
         
         returnButton = SKSpriteNode(texture: SKTexture(imageNamed: "back"))
         returnButton?.name = "returnBtn"
         returnButton?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2-120)
+        returnButton?.zPosition = 1
         
         optionsNameLabel = SKLabelNode(fontNamed: "Chalkduster")
         optionsNameLabel.text = "Options"
         optionsNameLabel.horizontalAlignmentMode = .right
         optionsNameLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2 + 70, y: UIScreen.main.bounds.height / 2+160)
+        optionsNameLabel?.zPosition = 1
         
         addChild(background!)
         addChild(easyButton!)

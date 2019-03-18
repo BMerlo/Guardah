@@ -18,8 +18,13 @@
 		1848238522394EBA0021EFD3 /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848238422394EBA0021EFD3 /* MenuScene.swift */; };
 		1848238722394F5F0021EFD3 /* krillin.atlasc in Resources */ = {isa = PBXBuildFile; fileRef = 1848238622394F5F0021EFD3 /* krillin.atlasc */; };
 		1848238922394FE70021EFD3 /* gokuAtlas.atlasc in Resources */ = {isa = PBXBuildFile; fileRef = 1848238822394FE70021EFD3 /* gokuAtlas.atlasc */; };
-		1848238B2239537F0021EFD3 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848238A2239537F0021EFD3 /* SplashScreen.swift */; };
-		1848238D223953C10021EFD3 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848238C223953C10021EFD3 /* GameOverScene.swift */; };
+		1848238B2239537F0021EFD3 /* HighscoreScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848238A2239537F0021EFD3 /* HighscoreScene.swift */; };
+		1848238D223953C10021EFD3 /* GameoverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848238C223953C10021EFD3 /* GameoverScene.swift */; };
+		187AA444223FD1F700082A92 /* OptionsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187AA443223FD1F700082A92 /* OptionsScene.swift */; };
+		18C14A9622401A7600EDBEC7 /* MyFireParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 18C14A9422401A7600EDBEC7 /* MyFireParticle.sks */; };
+		18C14A9722401A7600EDBEC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18C14A9522401A7600EDBEC7 /* Assets.xcassets */; };
+		18C14A9922401AAB00EDBEC7 /* Particles in Resources */ = {isa = PBXBuildFile; fileRef = 18C14A9822401AAB00EDBEC7 /* Particles */; };
+		18C14A9B22402C6000EDBEC7 /* WinScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C14A9A22402C6000EDBEC7 /* WinScene.swift */; };
 		A1706E61223B1D3D003E2295 /* UI in Resources */ = {isa = PBXBuildFile; fileRef = A1706E60223B1D3D003E2295 /* UI */; };
 /* End PBXBuildFile section */
 
@@ -56,8 +61,13 @@
 		1848238422394EBA0021EFD3 /* MenuScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
 		1848238622394F5F0021EFD3 /* krillin.atlasc */ = {isa = PBXFileReference; lastKnownFileType = folder; name = krillin.atlasc; path = Guardah/krillin.atlasc; sourceTree = "<group>"; };
 		1848238822394FE70021EFD3 /* gokuAtlas.atlasc */ = {isa = PBXFileReference; lastKnownFileType = folder; name = gokuAtlas.atlasc; path = Guardah/gokuAtlas.atlasc; sourceTree = "<group>"; };
-		1848238A2239537F0021EFD3 /* SplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
-		1848238C223953C10021EFD3 /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
+		1848238A2239537F0021EFD3 /* HighscoreScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighscoreScene.swift; sourceTree = "<group>"; };
+		1848238C223953C10021EFD3 /* GameoverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameoverScene.swift; sourceTree = "<group>"; };
+		187AA443223FD1F700082A92 /* OptionsScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsScene.swift; sourceTree = "<group>"; };
+		18C14A9422401A7600EDBEC7 /* MyFireParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = MyFireParticle.sks; path = Particles/MyFireParticle.sks; sourceTree = "<group>"; };
+		18C14A9522401A7600EDBEC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Particles/Assets.xcassets; sourceTree = "<group>"; };
+		18C14A9822401AAB00EDBEC7 /* Particles */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Particles; path = Guardah/Particles; sourceTree = "<group>"; };
+		18C14A9A22402C6000EDBEC7 /* WinScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinScene.swift; sourceTree = "<group>"; };
 		A1706E60223B1D3D003E2295 /* UI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UI; path = Guardah/UI; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -89,6 +99,7 @@
 		1848234222394D100021EFD3 = {
 			isa = PBXGroup;
 			children = (
+				18C14A9822401AAB00EDBEC7 /* Particles */,
 				A1706E5F223B1CCF003E2295 /* Sprites */,
 				1848238822394FE70021EFD3 /* gokuAtlas.atlasc */,
 				1848238622394F5F0021EFD3 /* krillin.atlasc */,
@@ -110,10 +121,12 @@
 		1848234D22394D100021EFD3 /* Guardah */ = {
 			isa = PBXGroup;
 			children = (
-				1848238C223953C10021EFD3 /* GameOverScene.swift */,
-				1848238A2239537F0021EFD3 /* SplashScreen.swift */,
+				1848238C223953C10021EFD3 /* GameoverScene.swift */,
+				18C14A9A22402C6000EDBEC7 /* WinScene.swift */,
+				1848238A2239537F0021EFD3 /* HighscoreScene.swift */,
 				1848238422394EBA0021EFD3 /* MenuScene.swift */,
 				1848238222394E0D0021EFD3 /* GameScene.swift */,
+				187AA443223FD1F700082A92 /* OptionsScene.swift */,
 				1848234E22394D100021EFD3 /* AppDelegate.swift */,
 				1848235022394D100021EFD3 /* GameScene.sks */,
 				1848235222394D100021EFD3 /* Actions.sks */,
@@ -122,6 +135,8 @@
 				1848235B22394D110021EFD3 /* Assets.xcassets */,
 				1848235D22394D110021EFD3 /* LaunchScreen.storyboard */,
 				1848236022394D110021EFD3 /* Info.plist */,
+				18C14A9422401A7600EDBEC7 /* MyFireParticle.sks */,
+				18C14A9522401A7600EDBEC7 /* Assets.xcassets */,
 			);
 			path = Guardah;
 			sourceTree = "<group>";
@@ -242,8 +257,11 @@
 				1848235A22394D100021EFD3 /* Main.storyboard in Resources */,
 				1848238922394FE70021EFD3 /* gokuAtlas.atlasc in Resources */,
 				1848235122394D100021EFD3 /* GameScene.sks in Resources */,
+				18C14A9722401A7600EDBEC7 /* Assets.xcassets in Resources */,
+				18C14A9622401A7600EDBEC7 /* MyFireParticle.sks in Resources */,
 				1848235C22394D110021EFD3 /* Assets.xcassets in Resources */,
 				1848235F22394D110021EFD3 /* LaunchScreen.storyboard in Resources */,
+				18C14A9922401AAB00EDBEC7 /* Particles in Resources */,
 				1848235322394D100021EFD3 /* Actions.sks in Resources */,
 				1848238722394F5F0021EFD3 /* krillin.atlasc in Resources */,
 			);
@@ -270,11 +288,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1848238B2239537F0021EFD3 /* SplashScreen.swift in Sources */,
+				1848238B2239537F0021EFD3 /* HighscoreScene.swift in Sources */,
+				187AA444223FD1F700082A92 /* OptionsScene.swift in Sources */,
 				1848238322394E0D0021EFD3 /* GameScene.swift in Sources */,
 				1848238522394EBA0021EFD3 /* MenuScene.swift in Sources */,
 				1848235722394D100021EFD3 /* GameViewController.swift in Sources */,
-				1848238D223953C10021EFD3 /* GameOverScene.swift in Sources */,
+				18C14A9B22402C6000EDBEC7 /* WinScene.swift in Sources */,
+				1848238D223953C10021EFD3 /* GameoverScene.swift in Sources */,
 				1848234F22394D100021EFD3 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
