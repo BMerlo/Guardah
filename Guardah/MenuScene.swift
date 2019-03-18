@@ -54,7 +54,8 @@ class MenuScene: SKScene {
         
         spriteLogo = SKSpriteNode(imageNamed: "spacecraft")
         spriteLogo.name = "spacecraft1"
-        spriteLogo.position = CGPoint(x: UIScreen.main.bounds.width / 2 + 70, y: UIScreen.main.bounds.height / 2+130)
+        spriteLogo.setScale(0.08)
+        spriteLogo.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2+220)
         
         addChild(background!)
         addChild(highScoreButton!)
@@ -64,6 +65,7 @@ class MenuScene: SKScene {
         addChild(gameNameLabel!)
         addChild(spriteLogo!)
     }
+    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -94,6 +96,5 @@ class MenuScene: SKScene {
             }                    })
                     
               }
-  
     }
 }
