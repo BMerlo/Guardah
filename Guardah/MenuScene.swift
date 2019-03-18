@@ -16,6 +16,8 @@ class MenuScene: SKScene {
     var optionsButton: SKSpriteNode!
     var highScoreButton: SKSpriteNode!
     var quitButton: SKSpriteNode!
+    var gameNameLabel: SKLabelNode!
+    var spriteLogo: SKSpriteNode!
     
     var background: SKSpriteNode!
     let screenSize: CGRect = UIScreen.main.bounds
@@ -43,13 +45,24 @@ class MenuScene: SKScene {
         
         quitButton = SKSpriteNode(texture: SKTexture(imageNamed: "quit"))
         quitButton?.name = "quitBtn"
-        quitButton?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2-90)
+        quitButton?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2-100)
+        
+        gameNameLabel = SKLabelNode(fontNamed: "Chalkduster")
+        gameNameLabel.text = "Guarda"
+        gameNameLabel.horizontalAlignmentMode = .right
+        gameNameLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2 + 70, y: UIScreen.main.bounds.height / 2+160)
+        
+        spriteLogo = SKSpriteNode(imageNamed: "spacecraft")
+        spriteLogo.name = "spacecraft1"
+        spriteLogo.position = CGPoint(x: UIScreen.main.bounds.width / 2 + 70, y: UIScreen.main.bounds.height / 2+130)
         
         addChild(background!)
         addChild(highScoreButton!)
         addChild(startButton!)
         addChild(optionsButton!)
         addChild(quitButton!)
+        addChild(gameNameLabel!)
+        addChild(spriteLogo!)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -70,7 +83,15 @@ class MenuScene: SKScene {
                                 print("Button Pressed")
                             }
                         }
-                    })
+            if node.name == "optionsBtn" {
+                if node.contains(t.location(in:self))// do whatever here
+                {
+                    let reveal = SKTransition.reveal(with: .up,                                                                duration: 1)
+                    let newScene = OptionsScene(size:self.size)
+                    self.view?.presentScene(newScene, transition: reveal)
+                    print("Button Pressed")
+                }
+            }                    })
                     
               }
   
