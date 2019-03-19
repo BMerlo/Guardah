@@ -15,6 +15,8 @@ class GameScene: SKScene {
     var winButton: SKSpriteNode!
     
     var PlayerSprite: SKSpriteNode!
+    var fireButton: SKSpriteNode!
+    let moveJoystick = 🕹(withDiameter: 80)
     
     let screenSize: CGRect = UIScreen.main.bounds
    
@@ -24,6 +26,8 @@ class GameScene: SKScene {
         background.position = CGPoint(x: screenSize.width/2, y:screenSize.height/2)
         background.size = CGSize(width: screenSize.width, height: screenSize.height)
         background?.zPosition = 0
+        
+        moveJoystick.position = CGPoint(x: screenSize.width * 0.15, y:screenSize.height * 0.2)
         
         lossButton = SKSpriteNode(texture: SKTexture(imageNamed: "youlost"))
         lossButton?.name = "lossBtn"
@@ -46,12 +50,22 @@ class GameScene: SKScene {
         PlayerSprite?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
         PlayerSprite?.zPosition = 2
         
+        fireButton = SKSpriteNode(imageNamed: "Big_Red_Button")
+        fireButton?.name = "fire"
+        fireButton?.setScale(0.3)
+        fireButton?.position = CGPoint(x: screenSize.width * 0.85, y:screenSize.height * 0.2)
+        fireButton?.zPosition = 2
+       
+
+        
         //addChild(superSpaceMan!)
         addChild(background!)
         addChild(backButton!)
         addChild(PlayerSprite!)
         addChild(lossButton!)
         addChild(winButton!)
+        addChild(moveJoystick)
+        addChild(fireButton)
         //superSpaceMan?.run(scaleBack)
     }
     
@@ -94,10 +108,33 @@ class GameScene: SKScene {
                         self.view?.presentScene(newScene, transition: reveal)
                         print("Button Pressed")
                     }
+                  }
+                if node.name == "fire" {
+                    if node.contains(t.location(in:self))// do whatever here
+                    {
+                      
+                        print("Fire Button Pressed")
+                    }
                 }
                 
-            })
+                })
+            }
+        }
+    
+    override func update(_ currentTime: TimeInterval) {
+        // Called before each frame is rendered
+        
+        moveJoystick.on(.move) { [unowned self] joystick in
+            guard let PlayerSprite = self.PlayerSprite else {
+                return
+            }
+            
+            let pVelocity = joystick.velocity;
+            let speed = CGFloat(0.09)
+            
+            PlayerSprite.position = CGPoint(x: PlayerSprite.position.x + (pVelocity.x * speed), y: PlayerSprite.position.y + (pVelocity.y * speed))
+            //   print(gokuSprite.position)
             
         }
-}
+    }
 }

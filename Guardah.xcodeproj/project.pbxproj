@@ -25,6 +25,7 @@
 		18C14A9722401A7600EDBEC7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18C14A9522401A7600EDBEC7 /* Assets.xcassets */; };
 		18C14A9922401AAB00EDBEC7 /* Particles in Resources */ = {isa = PBXBuildFile; fileRef = 18C14A9822401AAB00EDBEC7 /* Particles */; };
 		18C14A9B22402C6000EDBEC7 /* WinScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C14A9A22402C6000EDBEC7 /* WinScene.swift */; };
+		A129A73D2240ADCF00024857 /* TLAnalogJoystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = A129A73C2240ADCF00024857 /* TLAnalogJoystick.swift */; };
 		A1706E61223B1D3D003E2295 /* UI in Resources */ = {isa = PBXBuildFile; fileRef = A1706E60223B1D3D003E2295 /* UI */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,7 @@
 		18C14A9522401A7600EDBEC7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Particles/Assets.xcassets; sourceTree = "<group>"; };
 		18C14A9822401AAB00EDBEC7 /* Particles */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Particles; path = Guardah/Particles; sourceTree = "<group>"; };
 		18C14A9A22402C6000EDBEC7 /* WinScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinScene.swift; sourceTree = "<group>"; };
+		A129A73C2240ADCF00024857 /* TLAnalogJoystick.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TLAnalogJoystick.swift; sourceTree = "<group>"; };
 		A1706E60223B1D3D003E2295 /* UI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UI; path = Guardah/UI; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -121,6 +123,7 @@
 		1848234D22394D100021EFD3 /* Guardah */ = {
 			isa = PBXGroup;
 			children = (
+				A129A73C2240ADCF00024857 /* TLAnalogJoystick.swift */,
 				1848238C223953C10021EFD3 /* GameoverScene.swift */,
 				18C14A9A22402C6000EDBEC7 /* WinScene.swift */,
 				1848238A2239537F0021EFD3 /* HighscoreScene.swift */,
@@ -294,6 +297,7 @@
 				1848238522394EBA0021EFD3 /* MenuScene.swift in Sources */,
 				1848235722394D100021EFD3 /* GameViewController.swift in Sources */,
 				18C14A9B22402C6000EDBEC7 /* WinScene.swift in Sources */,
+				A129A73D2240ADCF00024857 /* TLAnalogJoystick.swift in Sources */,
 				1848238D223953C10021EFD3 /* GameoverScene.swift in Sources */,
 				1848234F22394D100021EFD3 /* AppDelegate.swift in Sources */,
 			);
