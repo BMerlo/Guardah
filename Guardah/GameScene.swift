@@ -19,13 +19,21 @@ class GameScene: SKScene {
     let moveJoystick = 🕹(withDiameter: 80)
     
     let screenSize: CGRect = UIScreen.main.bounds
-   
+    var score = 0
+    let ScoreLabel = SKLabelNode(fontNamed:"Helvetica")
+    
     override init(size: CGSize) {
         super.init(size: size)
         background = SKSpriteNode(texture: SKTexture(imageNamed: "Background"))
         background.position = CGPoint(x: screenSize.width/2, y:screenSize.height/2)
         background.size = CGSize(width: screenSize.width, height: screenSize.height)
         background?.zPosition = 0
+        
+        ScoreLabel.text = "SCORE:   \(score)"
+        ScoreLabel.fontSize = 16
+        ScoreLabel.position = CGPoint(x: screenSize.width * 0.80, y:screenSize.height * 0.95)
+        ScoreLabel.fontColor = UIColor.yellow
+        ScoreLabel.zPosition = 2
         
         moveJoystick.position = CGPoint(x: screenSize.width * 0.15, y:screenSize.height * 0.2)
         
@@ -55,10 +63,9 @@ class GameScene: SKScene {
         fireButton?.setScale(0.3)
         fireButton?.position = CGPoint(x: screenSize.width * 0.85, y:screenSize.height * 0.2)
         fireButton?.zPosition = 2
-       
 
-        
         //addChild(superSpaceMan!)
+        addChild(ScoreLabel)
         addChild(background!)
         addChild(backButton!)
         addChild(PlayerSprite!)
