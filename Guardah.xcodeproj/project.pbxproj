@@ -16,8 +16,6 @@
 		1848235F22394D110021EFD3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1848235D22394D110021EFD3 /* LaunchScreen.storyboard */; };
 		1848238322394E0D0021EFD3 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848238222394E0D0021EFD3 /* GameScene.swift */; };
 		1848238522394EBA0021EFD3 /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848238422394EBA0021EFD3 /* MenuScene.swift */; };
-		1848238722394F5F0021EFD3 /* krillin.atlasc in Resources */ = {isa = PBXBuildFile; fileRef = 1848238622394F5F0021EFD3 /* krillin.atlasc */; };
-		1848238922394FE70021EFD3 /* gokuAtlas.atlasc in Resources */ = {isa = PBXBuildFile; fileRef = 1848238822394FE70021EFD3 /* gokuAtlas.atlasc */; };
 		1848238B2239537F0021EFD3 /* HighscoreScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848238A2239537F0021EFD3 /* HighscoreScene.swift */; };
 		1848238D223953C10021EFD3 /* GameoverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1848238C223953C10021EFD3 /* GameoverScene.swift */; };
 		187AA444223FD1F700082A92 /* OptionsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187AA443223FD1F700082A92 /* OptionsScene.swift */; };
@@ -26,6 +24,9 @@
 		18C14A9922401AAB00EDBEC7 /* Particles in Resources */ = {isa = PBXBuildFile; fileRef = 18C14A9822401AAB00EDBEC7 /* Particles */; };
 		18C14A9B22402C6000EDBEC7 /* WinScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C14A9A22402C6000EDBEC7 /* WinScene.swift */; };
 		A129A73D2240ADCF00024857 /* TLAnalogJoystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = A129A73C2240ADCF00024857 /* TLAnalogJoystick.swift */; };
+		A15C7ACE2249A37300CBD049 /* AppIcons in Resources */ = {isa = PBXBuildFile; fileRef = A15C7ACD2249A37300CBD049 /* AppIcons */; };
+		A15C7AD12249A3DB00CBD049 /* Music in Resources */ = {isa = PBXBuildFile; fileRef = A15C7AD02249A3DB00CBD049 /* Music */; };
+		A15C7AD72249A43100CBD049 /* Sfx in Resources */ = {isa = PBXBuildFile; fileRef = A15C7AD62249A43100CBD049 /* Sfx */; };
 		A1706E61223B1D3D003E2295 /* UI in Resources */ = {isa = PBXBuildFile; fileRef = A1706E60223B1D3D003E2295 /* UI */; };
 /* End PBXBuildFile section */
 
@@ -60,8 +61,6 @@
 		1848237022394D110021EFD3 /* GuardahUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GuardahUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1848238222394E0D0021EFD3 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		1848238422394EBA0021EFD3 /* MenuScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
-		1848238622394F5F0021EFD3 /* krillin.atlasc */ = {isa = PBXFileReference; lastKnownFileType = folder; name = krillin.atlasc; path = Guardah/krillin.atlasc; sourceTree = "<group>"; };
-		1848238822394FE70021EFD3 /* gokuAtlas.atlasc */ = {isa = PBXFileReference; lastKnownFileType = folder; name = gokuAtlas.atlasc; path = Guardah/gokuAtlas.atlasc; sourceTree = "<group>"; };
 		1848238A2239537F0021EFD3 /* HighscoreScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighscoreScene.swift; sourceTree = "<group>"; };
 		1848238C223953C10021EFD3 /* GameoverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameoverScene.swift; sourceTree = "<group>"; };
 		187AA443223FD1F700082A92 /* OptionsScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsScene.swift; sourceTree = "<group>"; };
@@ -70,6 +69,9 @@
 		18C14A9822401AAB00EDBEC7 /* Particles */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Particles; path = Guardah/Particles; sourceTree = "<group>"; };
 		18C14A9A22402C6000EDBEC7 /* WinScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinScene.swift; sourceTree = "<group>"; };
 		A129A73C2240ADCF00024857 /* TLAnalogJoystick.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TLAnalogJoystick.swift; sourceTree = "<group>"; };
+		A15C7ACD2249A37300CBD049 /* AppIcons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AppIcons; path = Guardah/AppIcons; sourceTree = SOURCE_ROOT; };
+		A15C7AD02249A3DB00CBD049 /* Music */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Music; path = Guardah/Audio/Music; sourceTree = SOURCE_ROOT; };
+		A15C7AD62249A43100CBD049 /* Sfx */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Sfx; path = Guardah/Audio/Sfx; sourceTree = SOURCE_ROOT; };
 		A1706E60223B1D3D003E2295 /* UI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UI; path = Guardah/UI; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -101,10 +103,9 @@
 		1848234222394D100021EFD3 = {
 			isa = PBXGroup;
 			children = (
+				A15C7ACF2249A3CB00CBD049 /* Audio */,
 				18C14A9822401AAB00EDBEC7 /* Particles */,
 				A1706E5F223B1CCF003E2295 /* Sprites */,
-				1848238822394FE70021EFD3 /* gokuAtlas.atlasc */,
-				1848238622394F5F0021EFD3 /* krillin.atlasc */,
 				1848234D22394D100021EFD3 /* Guardah */,
 				1848234C22394D100021EFD3 /* Products */,
 			);
@@ -144,9 +145,19 @@
 			path = Guardah;
 			sourceTree = "<group>";
 		};
+		A15C7ACF2249A3CB00CBD049 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				A15C7AD62249A43100CBD049 /* Sfx */,
+				A15C7AD02249A3DB00CBD049 /* Music */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
 		A1706E5F223B1CCF003E2295 /* Sprites */ = {
 			isa = PBXGroup;
 			children = (
+				A15C7ACD2249A37300CBD049 /* AppIcons */,
 				A1706E60223B1D3D003E2295 /* UI */,
 			);
 			path = Sprites;
@@ -256,9 +267,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A15C7AD72249A43100CBD049 /* Sfx in Resources */,
+				A15C7AD12249A3DB00CBD049 /* Music in Resources */,
 				A1706E61223B1D3D003E2295 /* UI in Resources */,
+				A15C7ACE2249A37300CBD049 /* AppIcons in Resources */,
 				1848235A22394D100021EFD3 /* Main.storyboard in Resources */,
-				1848238922394FE70021EFD3 /* gokuAtlas.atlasc in Resources */,
 				1848235122394D100021EFD3 /* GameScene.sks in Resources */,
 				18C14A9722401A7600EDBEC7 /* Assets.xcassets in Resources */,
 				18C14A9622401A7600EDBEC7 /* MyFireParticle.sks in Resources */,
@@ -266,7 +279,6 @@
 				1848235F22394D110021EFD3 /* LaunchScreen.storyboard in Resources */,
 				18C14A9922401AAB00EDBEC7 /* Particles in Resources */,
 				1848235322394D100021EFD3 /* Actions.sks in Resources */,
-				1848238722394F5F0021EFD3 /* krillin.atlasc in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

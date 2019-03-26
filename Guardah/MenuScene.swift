@@ -11,7 +11,6 @@ import SpriteKit
 
 class MenuScene: SKScene {
     
-    //TODO: - Use this to create a menu scene
     var startButton: SKSpriteNode!
     var optionsButton: SKSpriteNode!
     var highScoreButton: SKSpriteNode!
@@ -23,10 +22,13 @@ class MenuScene: SKScene {
     var background: SKSpriteNode!
     let screenSize: CGRect = UIScreen.main.bounds
     
+    let selectionSound = SKAudioNode(fileNamed: "/Sfx/select.wav")
+    let backgroundMusic = SKAudioNode(fileNamed: "/Music/Flying_Force_Combat.mp3")
     
-    //TODO: - Add a main menu and play button
     override init(size: CGSize) {
         super.init(size: size)
+        
+        selectionSound.autoplayLooped = false;
         
         fireParticle = SKEmitterNode(fileNamed: "MyFireParticle.sks")
         fireParticle.name = "fireme"
@@ -79,6 +81,10 @@ class MenuScene: SKScene {
         addChild(gameNameLabel!)
         addChild(spriteLogo!)
         addChild(fireParticle!)
+        
+        //audio
+        addChild(selectionSound)
+        addChild(backgroundMusic)
     }
     
     
@@ -92,34 +98,46 @@ class MenuScene: SKScene {
             //scene?.view?.presentScene(GameScene(size: self.frame.size))
            enumerateChildNodes(withName: "//*", using: { ( node, stop) in
                if node.name == "startBtn" {
-                            if node.contains(t.location(in:self))// do whatever here
-                            {
-                                let reveal = SKTransition.reveal(with: .up,                                                                duration: 1)
-                                let newScene = GameScene(size:self.size)
-                                self.view?.presentScene(newScene, transition: reveal)
-                                print("Button Pressed")
-                            }
-                        }
+                    if node.contains(t.location(in:self))// do whatever here
+                       {
+                         self.selectionSound.run(SKAction.play());
+                         self.perform(#selector(self.changeSceneGame), with: nil, afterDelay: 0.6)
+                       }
+            }
             if node.name == "optionsBtn" {
                 if node.contains(t.location(in:self))// do whatever here
                 {
-                    let reveal = SKTransition.reveal(with: .up,                                                                duration: 1)
-                    let newScene = OptionsScene(size:self.size)
-                    self.view?.presentScene(newScene, transition: reveal)
-                    print("Button Pressed")
+                    self.selectionSound.run(SKAction.play());
+                    self.perform(#selector(self.changeSceneOptions), with: nil, afterDelay: 0.6)
                 }
             }
             if node.name == "highscoreBtn" {
                 if node.contains(t.location(in:self))// do whatever here
                 {
-                    let reveal = SKTransition.reveal(with: .up,                                                                duration: 1)
-                    let newScene = HighscoreScene(size:self.size)
-                    self.view?.presentScene(newScene, transition: reveal)
-                    print("Button Pressed")
+                   self.selectionSound.run(SKAction.play());
+                   self.perform(#selector(self.changeSceneHighScore), with: nil, afterDelay: 0.6)
                 }
             }
            })
                     
-              }
+        }
+    }
+    
+    @objc func changeSceneGame(){ //change scene after 1 sec
+        let reveal = SKTransition.reveal(with: .up, duration: 0.6)
+        let newScene = GameScene(size:self.size)
+        self.view?.presentScene(newScene, transition: reveal)
+    }
+    
+    @objc func changeSceneOptions(){ //change scene after 1 sec
+        let reveal = SKTransition.reveal(with: .right, duration: 0.6)
+        let newScene = OptionsScene(size:self.size)
+        self.view?.presentScene(newScene, transition: reveal)
+    }
+    
+    @objc func changeSceneHighScore(){ //change scene after 1 sec
+        let reveal = SKTransition.reveal(with: .right, duration: 0.6)
+        let newScene = HighscoreScene(size:self.size)
+        self.view?.presentScene(newScene, transition: reveal)
     }
 }

@@ -14,13 +14,17 @@ class HighscoreScene: SKScene {
     var highscore2: SKLabelNode!
     var highscore3: SKLabelNode!
     
-    
     var highscoreValue1: SKLabelNode!
     var highscoreValue2: SKLabelNode!
     var highscoreValue3: SKLabelNode!
     
+    let selectionSound = SKAudioNode(fileNamed: "/Sfx/select.wav")
+    let backgroundMusic = SKAudioNode(fileNamed: "/Music/Flying_Force_Combat.mp3")
+    
     override init(size: CGSize) {
         super.init(size: size)
+        
+        selectionSound.autoplayLooped = false
         
         background = SKSpriteNode(texture: SKTexture(imageNamed: "PlanetStart"))
         background.position = CGPoint(x: screenSize.width/2, y:screenSize.height/2)
@@ -86,6 +90,10 @@ class HighscoreScene: SKScene {
         addChild(highscoreValue1!)
         addChild(highscoreValue2!)
         addChild(highscoreValue3!)
+        
+        //audio
+        addChild(selectionSound)
+        addChild(backgroundMusic)
     }
     
     
@@ -102,14 +110,18 @@ class HighscoreScene: SKScene {
                 if node.name == "returnBtn" {
                     if node.contains(t.location(in:self))// do whatever here
                     {
-                        let reveal = SKTransition.reveal(with: .up,                                                                duration: 1)
-                        let newScene = MenuScene(size:self.size)
-                        self.view?.presentScene(newScene, transition: reveal)
-                        print("Button Pressed")
+                        self.selectionSound.run(SKAction.play());
+                        self.perform(#selector(self.changeSceneMenu), with: nil, afterDelay: 0.6)
                     }
                 }
             })
             
         }
+    }
+    
+    @objc func changeSceneMenu(){ //change scene after 1 sec
+        let reveal = SKTransition.reveal(with: .left, duration: 0.6)
+        let newScene = MenuScene(size:self.size)
+        self.view?.presentScene(newScene, transition: reveal)
     }
 }

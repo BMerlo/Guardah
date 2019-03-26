@@ -22,8 +22,16 @@ class GameScene: SKScene {
     var score = 0
     let ScoreLabel = SKLabelNode(fontNamed:"Helvetica")
     
+    let selectionSound = SKAudioNode(fileNamed: "/Sfx/select.wav")
+    let backgroundMusic = SKAudioNode(fileNamed: "/Music/win_the_game.mp3")
+    let shootSound = SKAudioNode(fileNamed: "/Sfx/shot_g.wav")
+    
     override init(size: CGSize) {
         super.init(size: size)
+        
+        selectionSound.autoplayLooped = false;
+        shootSound.autoplayLooped = false;
+        
         background = SKSpriteNode(texture: SKTexture(imageNamed: "Background"))
         background.position = CGPoint(x: screenSize.width/2, y:screenSize.height/2)
         background.size = CGSize(width: screenSize.width, height: screenSize.height)
@@ -31,7 +39,7 @@ class GameScene: SKScene {
         
         ScoreLabel.text = "SCORE:   \(score)"
         ScoreLabel.fontSize = 16
-        ScoreLabel.position = CGPoint(x: screenSize.width * 0.80, y:screenSize.height * 0.95)
+        ScoreLabel.position = CGPoint(x: screenSize.width * 0.20, y:screenSize.height * 0.95)
         ScoreLabel.fontColor = UIColor.yellow
         ScoreLabel.zPosition = 2
         
@@ -49,7 +57,7 @@ class GameScene: SKScene {
         
         backButton = SKSpriteNode(texture: SKTexture(imageNamed: "smallerback"))
         backButton?.name = "backBtn"
-        backButton?.position = CGPoint(x: 10, y: screenSize.height - 15)
+        backButton?.position = CGPoint(x: screenSize.width * 0.90, y:screenSize.height * 0.97)
         backButton?.zPosition = 1
         
         PlayerSprite = SKSpriteNode(imageNamed: "spacecraft")
@@ -63,8 +71,7 @@ class GameScene: SKScene {
         fireButton?.setScale(0.3)
         fireButton?.position = CGPoint(x: screenSize.width * 0.85, y:screenSize.height * 0.2)
         fireButton?.zPosition = 2
-
-        //addChild(superSpaceMan!)
+        
         addChild(ScoreLabel)
         addChild(background!)
         addChild(backButton!)
@@ -74,6 +81,10 @@ class GameScene: SKScene {
         addChild(moveJoystick)
         addChild(fireButton)
         //superSpaceMan?.run(scaleBack)
+        
+        addChild(shootSound)
+        addChild(selectionSound)
+        addChild(backgroundMusic)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -92,13 +103,11 @@ class GameScene: SKScene {
                 if node.name == "backBtn" {
                     if node.contains(t.location(in:self))// do whatever here
                     {
-                        let reveal = SKTransition.reveal(with: .up,                                                                duration: 1)
-                        let newScene = MenuScene(size:self.size)
-                        self.view?.presentScene(newScene, transition: reveal)
-                        print("Button Pressed")
+                        self.selectionSound.run(SKAction.play());
+                         self.perform(#selector(self.changeSceneMenu), with: nil, afterDelay: 0.6)
                     }
                 }
-                if node.name == "lossBtn" {
+                if node.name == "lossBtn" {//not necessary to add delay before changing scene, this isn't on the game
                     if node.contains(t.location(in:self))// do whatever here
                     {
                         let reveal = SKTransition.reveal(with: .up,                                                                duration: 1)
@@ -119,7 +128,7 @@ class GameScene: SKScene {
                 if node.name == "fire" {
                     if node.contains(t.location(in:self))// do whatever here
                     {
-                      
+                      self.shootSound.run(SKAction.play());
                         print("Fire Button Pressed")
                     }
                 }
@@ -143,5 +152,11 @@ class GameScene: SKScene {
             //   print(gokuSprite.position)
             
         }
+    }
+    
+    @objc func changeSceneMenu(){ //change scene after 0.6 sec
+        let reveal = SKTransition.reveal(with: .left, duration: 0.6)
+        let newScene = MenuScene(size:self.size)
+        self.view?.presentScene(newScene, transition: reveal)
     }
 }
