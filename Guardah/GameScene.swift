@@ -15,6 +15,16 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var background2: SKSpriteNode!
     var backButton: SKSpriteNode!
     let screenSize: CGRect = UIScreen.main.bounds
+    var playerLife1: SKSpriteNode!
+    var playerLife2: SKSpriteNode!
+    var playerLife3: SKSpriteNode!
+    
+    var playerLives = 3
+    
+    //ENEMIES
+    var enemy1: SKSpriteNode!
+    var enemy2: SKSpriteNode!
+    var boss: SKSpriteNode!
     
     var lossButton: SKSpriteNode!
     var winButton: SKSpriteNode!
@@ -37,8 +47,11 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var score = 0
     let ScoreLabel = SKLabelNode(fontNamed:"Helvetica")
     
+    var timerToShoot = Timer()
+    
     //MOVES
     var moveShot:SKAction!
+    var moveEnemyShot:SKAction!
     var rotation:SKAction!
     
     //sounds
@@ -54,6 +67,8 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         selectionSound.autoplayLooped = false;
         shootSound.autoplayLooped = false;
         
+         let timerToShoot = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(fire(timer:)), userInfo: nil, repeats: true)
+        
         superSpaceMan = SKSpriteNode(texture: SKTexture(imageNamed: "PowerUp"))
         superSpaceMan.position = CGPoint(x: screenSize.width/2, y:screenSize.height/2)
         superSpaceMan?.physicsBody = SKPhysicsBody(rectangleOf: (superSpaceMan?.frame.size)!)
@@ -65,8 +80,35 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         superSpaceMan?.physicsBody?.contactTestBitMask = wallCategory | playerCategory
         superSpaceMan?.physicsBody?.collisionBitMask = wallCategory | playerCategory
         
+        enemy1 = SKSpriteNode(texture: SKTexture(imageNamed: "enemy1"))
+        enemy1.setScale(0.5)
+        enemy1.position = CGPoint(x: screenSize.width * 0.8, y:screenSize.height * 0.8)
+        enemy1?.physicsBody = SKPhysicsBody(rectangleOf: (enemy1?.frame.size)!)
+        enemy1?.physicsBody?.affectedByGravity = false;
+        enemy1?.physicsBody?.allowsRotation = false;
+        enemy1?.physicsBody?.mass = 2.0
+        enemy1.name = "enemy1"
+        
+        enemy1?.physicsBody?.categoryBitMask = enemyCategory
+        enemy1?.physicsBody?.contactTestBitMask = playerCategory | attackPCategory
+        enemy1?.physicsBody?.collisionBitMask = playerCategory | attackPCategory
+        
+        boss = SKSpriteNode(texture: SKTexture(imageNamed: "boss"))
+        boss.setScale(0.2)
+        boss.name = "boss"
+        boss.position = CGPoint(x: screenSize.width * 0.2, y:screenSize.height * 0.8)
+        boss?.physicsBody = SKPhysicsBody(rectangleOf: (boss?.frame.size)!)
+        boss?.physicsBody?.affectedByGravity = false;
+        boss?.physicsBody?.allowsRotation = false;
+        boss?.physicsBody?.mass = 2.0
+        
+        boss?.physicsBody?.categoryBitMask = enemyCategory
+        boss?.physicsBody?.contactTestBitMask = wallCategory
+        boss?.physicsBody?.collisionBitMask = playerCategory | attackPCategory
+        
         //moves
         moveShot = SKAction.moveBy(x: 0, y: screenSize.height, duration: 1.6)
+        moveEnemyShot = SKAction.moveBy(x: 0, y: -screenSize.height, duration: 2.2)
         rotation = SKAction.rotate(toAngle: 90, duration: 0.1)
         
         background = SKSpriteNode(texture: SKTexture(imageNamed: "Background"))
@@ -129,6 +171,21 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         backButton?.position = CGPoint(x: screenSize.width * 0.90, y:screenSize.height * 0.97)
         backButton?.zPosition = 1
         
+        playerLife1 = SKSpriteNode(imageNamed: "spacecraft")
+        playerLife1?.setScale(0.02)
+        playerLife1?.position = CGPoint(x: screenSize.width * 0.02, y:screenSize.height * 0.96)
+        playerLife1?.zPosition = 3
+        
+        playerLife2 = SKSpriteNode(imageNamed: "spacecraft")
+        playerLife2?.setScale(0.02)
+        playerLife2?.position = CGPoint(x: screenSize.width * 0.02, y:screenSize.height * 0.92)
+        playerLife2?.zPosition = 3
+        
+        playerLife3 = SKSpriteNode(imageNamed: "spacecraft")
+        playerLife3?.setScale(0.02)
+        playerLife3?.position = CGPoint(x: screenSize.width * 0.02, y:screenSize.height * 0.88)
+        playerLife3?.zPosition = 3
+        
         PlayerSprite = SKSpriteNode(imageNamed: "spacecraft")
         PlayerSprite?.name = "spacecraft1"
         PlayerSprite?.setScale(0.06)
@@ -140,7 +197,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         PlayerSprite?.physicsBody?.mass = 2.0
         
         PlayerSprite?.physicsBody?.categoryBitMask = playerCategory
-        PlayerSprite?.physicsBody?.contactTestBitMask = 00011111
+        PlayerSprite?.physicsBody?.contactTestBitMask = wallCategory / attackECategory
         PlayerSprite?.physicsBody?.collisionBitMask = attackECategory | enemyCategory | wallCategory | powerUpCategory
         
         fireButton = SKSpriteNode(imageNamed: "Big_Red_Button")
@@ -156,9 +213,13 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         self.physicsBody?.contactTestBitMask = enemyCategory
         self.physicsWorld.contactDelegate = self
         
+        addChild(enemy1)
         addChild(ScoreLabel)
         addChild(background!)
         addChild(background2!)
+        addChild(playerLife1)
+        addChild(playerLife2)
+        addChild(playerLife3)
         addChild(backButton!)
         addChild(PlayerSprite!)
         addChild(superSpaceMan)
@@ -167,6 +228,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         addChild(moveJoystick)
         addChild(fireButton)
         //superSpaceMan?.run(scaleBack)
+        addChild(boss)
         
         addChild(shootSound)
         addChild(selectionSound)
@@ -192,8 +254,65 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         
         if contact.bodyA.categoryBitMask == playerCategory && contact.bodyB.categoryBitMask == powerUpCategory {
             playerPower = playerPower + 1
+            contact.bodyB.node?.removeFromParent()
             print("player power", playerPower)
         }
+        
+        if contact.bodyA.categoryBitMask == enemyCategory && contact.bodyB.categoryBitMask == playerCategory {
+            print("enemy with player")
+            contact.bodyA.node?.position = CGPoint(x: screenSize.width/2, y: -30)
+            playerLives = playerLives - 1
+            contact.bodyB.node?.removeFromParent()
+        }
+        
+        if contact.bodyA.categoryBitMask == playerCategory && contact.bodyB.categoryBitMask == attackECategory {
+            print("player with enemyAttack")
+            playerLives = playerLives - 1
+            PlayerSprite.run(SKAction.repeatForever(self.explosion1), completion: {
+                self.PlayerSprite.position = CGPoint(x: self.screenSize.width/2, y: self.screenSize.height * 0.1)
+                self.PlayerSprite.setScale(0.06)
+                self.PlayerSprite = SKSpriteNode(imageNamed: "spacecraft")
+            })
+            
+            contact.bodyB.node?.removeFromParent()
+        }
+        
+        if contact.bodyA.categoryBitMask == enemyCategory && contact.bodyB.categoryBitMask == attackPCategory {
+           // print("attack working")
+            if(contact.bodyA.node?.name == "boss")
+            {
+                print("boss")
+                score = score + 1000
+            }
+            if(contact.bodyA.node?.name == "enemy1")
+            {
+                print("enemy1")
+                score = score + 100
+            }
+            contact.bodyB.node?.removeFromParent()
+            contact.bodyA.node?.removeFromParent()
+            
+        }
+    }
+    
+    @objc func fire(timer: Timer)
+    {
+        // print("I got called")
+        var enemyAttack:SKSpriteNode!
+        enemyAttack = SKSpriteNode(imageNamed: "enemyShot")
+        enemyAttack.setScale(0.5)
+        enemyAttack.position = CGPoint(x: enemy1.position.x, y: enemy1.position.y - 10)
+        
+        enemyAttack?.physicsBody = SKPhysicsBody(rectangleOf: (enemyAttack?.frame.size)!)
+        enemyAttack?.physicsBody?.affectedByGravity = false;
+        enemyAttack?.physicsBody?.allowsRotation = false;
+        enemyAttack?.physicsBody?.mass = 2.0
+        enemyAttack?.physicsBody?.categoryBitMask = attackECategory
+        enemyAttack?.physicsBody?.contactTestBitMask = playerCategory
+        enemyAttack?.physicsBody?.collisionBitMask = playerCategory
+        // vegetaBall.name = "ballV"
+        enemyAttack.run(moveEnemyShot)
+        self.addChild(enemyAttack)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -247,6 +366,15 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                             playerShoot = SKSpriteNode(imageNamed: "shot4")
                             playerShoot?.setScale(0.7)
                         }
+                        playerShoot?.physicsBody = SKPhysicsBody(rectangleOf: (playerShoot?.frame.size)!)
+                        playerShoot?.physicsBody?.affectedByGravity = false;
+                        playerShoot?.physicsBody?.allowsRotation = false;
+                        playerShoot?.physicsBody?.mass = 0.2
+                        
+                        playerShoot?.physicsBody?.categoryBitMask = attackPCategory
+                        playerShoot?.physicsBody?.contactTestBitMask = enemyCategory
+                        playerShoot?.physicsBody?.collisionBitMask = enemyCategory
+                        
                         playerShoot.position = CGPoint(x: self.PlayerSprite.position.x, y: self.PlayerSprite.position.y + 10)
                         playerShoot.run(self.moveShot)
                         
@@ -260,6 +388,23 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        ScoreLabel.text = "\(score)"
+        
+        if playerLives == 2
+        {
+            playerLife3.removeFromParent()
+        }
+        else if playerLives == 1
+        {
+            playerLife2.removeFromParent()
+        }
+        else if playerLives == 0
+        {
+            playerLife1.removeFromParent()
+        }
+        else if playerLives < 0{
+            addChild(lossButton!)
+        }
         
         moveJoystick.on(.move) { [unowned self] joystick in
             guard let PlayerSprite = self.PlayerSprite else {
