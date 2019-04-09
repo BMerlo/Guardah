@@ -28,6 +28,9 @@
 		A15C7AD12249A3DB00CBD049 /* Music in Resources */ = {isa = PBXBuildFile; fileRef = A15C7AD02249A3DB00CBD049 /* Music */; };
 		A15C7AD72249A43100CBD049 /* Sfx in Resources */ = {isa = PBXBuildFile; fileRef = A15C7AD62249A43100CBD049 /* Sfx */; };
 		A1706E61223B1D3D003E2295 /* UI in Resources */ = {isa = PBXBuildFile; fileRef = A1706E60223B1D3D003E2295 /* UI */; };
+		A1F5FC2F225CEE8D001E5609 /* explosionFire.atlasc in Resources */ = {isa = PBXBuildFile; fileRef = A1F5FC2D225CEE8C001E5609 /* explosionFire.atlasc */; };
+		A1F5FC30225CEE8D001E5609 /* explosionLight.atlasc in Resources */ = {isa = PBXBuildFile; fileRef = A1F5FC2E225CEE8C001E5609 /* explosionLight.atlasc */; };
+		A1FAA4BB225CF9E100639AFF /* Images in Resources */ = {isa = PBXBuildFile; fileRef = A1FAA4BA225CF9E100639AFF /* Images */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +76,9 @@
 		A15C7AD02249A3DB00CBD049 /* Music */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Music; path = Guardah/Audio/Music; sourceTree = SOURCE_ROOT; };
 		A15C7AD62249A43100CBD049 /* Sfx */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Sfx; path = Guardah/Audio/Sfx; sourceTree = SOURCE_ROOT; };
 		A1706E60223B1D3D003E2295 /* UI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UI; path = Guardah/UI; sourceTree = SOURCE_ROOT; };
+		A1F5FC2D225CEE8C001E5609 /* explosionFire.atlasc */ = {isa = PBXFileReference; lastKnownFileType = folder; name = explosionFire.atlasc; path = Animations/explosionFire.atlasc; sourceTree = SOURCE_ROOT; };
+		A1F5FC2E225CEE8C001E5609 /* explosionLight.atlasc */ = {isa = PBXFileReference; lastKnownFileType = folder; name = explosionLight.atlasc; path = Animations/explosionLight.atlasc; sourceTree = SOURCE_ROOT; };
+		A1FAA4BA225CF9E100639AFF /* Images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Images; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +109,7 @@
 		1848234222394D100021EFD3 = {
 			isa = PBXGroup;
 			children = (
+				A1F5FC2C225CEE73001E5609 /* Animation */,
 				A15C7ACF2249A3CB00CBD049 /* Audio */,
 				18C14A9822401AAB00EDBEC7 /* Particles */,
 				A1706E5F223B1CCF003E2295 /* Sprites */,
@@ -148,6 +155,7 @@
 		A15C7ACF2249A3CB00CBD049 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				A1FAA4BA225CF9E100639AFF /* Images */,
 				A15C7AD62249A43100CBD049 /* Sfx */,
 				A15C7AD02249A3DB00CBD049 /* Music */,
 			);
@@ -161,6 +169,15 @@
 				A1706E60223B1D3D003E2295 /* UI */,
 			);
 			path = Sprites;
+			sourceTree = "<group>";
+		};
+		A1F5FC2C225CEE73001E5609 /* Animation */ = {
+			isa = PBXGroup;
+			children = (
+				A1F5FC2D225CEE8C001E5609 /* explosionFire.atlasc */,
+				A1F5FC2E225CEE8C001E5609 /* explosionLight.atlasc */,
+			);
+			path = Animation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -267,6 +284,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1F5FC2F225CEE8D001E5609 /* explosionFire.atlasc in Resources */,
 				A15C7AD72249A43100CBD049 /* Sfx in Resources */,
 				A15C7AD12249A3DB00CBD049 /* Music in Resources */,
 				A1706E61223B1D3D003E2295 /* UI in Resources */,
@@ -276,8 +294,10 @@
 				18C14A9722401A7600EDBEC7 /* Assets.xcassets in Resources */,
 				18C14A9622401A7600EDBEC7 /* MyFireParticle.sks in Resources */,
 				1848235C22394D110021EFD3 /* Assets.xcassets in Resources */,
+				A1FAA4BB225CF9E100639AFF /* Images in Resources */,
 				1848235F22394D110021EFD3 /* LaunchScreen.storyboard in Resources */,
 				18C14A9922401AAB00EDBEC7 /* Particles in Resources */,
+				A1F5FC30225CEE8D001E5609 /* explosionLight.atlasc in Resources */,
 				1848235322394D100021EFD3 /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -483,6 +503,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H9VZ839PYR;
 				INFOPLIST_FILE = Guardah/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -500,6 +521,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = H9VZ839PYR;
 				INFOPLIST_FILE = Guardah/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
