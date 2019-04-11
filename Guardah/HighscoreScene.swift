@@ -4,15 +4,12 @@ import SpriteKit
 
 class HighscoreScene: SKScene {
     
+    var scoreGetter: Int?
     
     var background: SKSpriteNode!
     let screenSize: CGRect = UIScreen.main.bounds
     var returnButton: SKSpriteNode!
     var highscoreNameLabel: SKLabelNode!
-    
-    var highscore1: SKLabelNode!
-    var highscore2: SKLabelNode!
-    var highscore3: SKLabelNode!
     
     var highscoreValue1: SKLabelNode!
     var highscoreValue2: SKLabelNode!
@@ -20,6 +17,15 @@ class HighscoreScene: SKScene {
     
     let selectionSound = SKAudioNode(fileNamed: "/Sfx/select.wav")
     let backgroundMusic = SKAudioNode(fileNamed: "/Music/Flying_Force_Combat.mp3")
+    
+    var passedOnce = false
+    var higherThan1 = false
+    var higherThan2 = false
+    var higherThan3 = false
+    
+    var PlaceHolder1: Int?
+    var PlaceHolder2: Int?
+    var PlaceHolder3: Int?
     
     override init(size: CGSize) {
         super.init(size: size)
@@ -37,45 +43,28 @@ class HighscoreScene: SKScene {
         returnButton?.zPosition = 1
         
         highscoreNameLabel = SKLabelNode(fontNamed: "Chalkduster")
-        highscoreNameLabel.text = "Highscores"
-        highscoreNameLabel.horizontalAlignmentMode = .right
-        highscoreNameLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2 + 70, y: UIScreen.main.bounds.height / 2+160)
+        highscoreNameLabel.text = "HIGH SCORES"
+        highscoreNameLabel.horizontalAlignmentMode = .center
+        highscoreNameLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2 , y: UIScreen.main.bounds.height / 2+120)
         highscoreNameLabel.zPosition = 1
-        
-        highscore1 = SKLabelNode(fontNamed: "Chalkduster")
-        highscore1.text = "Highscore: "
-        highscore1.horizontalAlignmentMode = .right
-        highscore1.position = CGPoint(x: UIScreen.main.bounds.width / 2-20, y: UIScreen.main.bounds.height / 2+60)
-        highscore1.zPosition = 1
-        
-        highscore2 = SKLabelNode(fontNamed: "Chalkduster")
-        highscore2.text = "Highscore: "
-        highscore2.horizontalAlignmentMode = .right
-        highscore2.position = CGPoint(x: UIScreen.main.bounds.width / 2-20, y: UIScreen.main.bounds.height / 2)
-        highscore2.zPosition = 1
-        
-        highscore3 = SKLabelNode(fontNamed: "Chalkduster")
-        highscore3.text = "Highscore: "
-        highscore3.horizontalAlignmentMode = .right
-        highscore3.position = CGPoint(x: UIScreen.main.bounds.width / 2-20, y: UIScreen.main.bounds.height / 2-60)
-        highscore3.zPosition = 1
         
         highscoreValue1 = SKLabelNode(fontNamed: "Chalkduster")
         highscoreValue1.text = "10000"
-        highscoreValue1.horizontalAlignmentMode = .right
-        highscoreValue1.position = CGPoint(x: UIScreen.main.bounds.width / 2 + 200, y: UIScreen.main.bounds.height / 2+60)
+        highscoreValue1.horizontalAlignmentMode = .center
+        highscoreValue1.position = CGPoint(x: UIScreen.main.bounds.width / 2 , y: UIScreen.main.bounds.height / 2+60)
         highscoreValue1.zPosition = 1
         
         highscoreValue2 = SKLabelNode(fontNamed: "Chalkduster")
         highscoreValue2.text = "1000"
-        highscoreValue2.horizontalAlignmentMode = .right
-        highscoreValue2.position = CGPoint(x: UIScreen.main.bounds.width / 2 + 200, y: UIScreen.main.bounds.height / 2)
+        print(Int(highscoreValue2.text!)!)
+        highscoreValue2.horizontalAlignmentMode = .center
+        highscoreValue2.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
         highscoreValue2.zPosition = 1
         
         highscoreValue3 = SKLabelNode(fontNamed: "Chalkduster")
         highscoreValue3.text = "100"
-        highscoreValue3.horizontalAlignmentMode = .right
-        highscoreValue3.position = CGPoint(x: UIScreen.main.bounds.width / 2 + 200, y: UIScreen.main.bounds.height / 2-60)
+        highscoreValue3.horizontalAlignmentMode = .center
+        highscoreValue3.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2-60)
         highscoreValue3.zPosition = 1
         
         
@@ -83,9 +72,6 @@ class HighscoreScene: SKScene {
         addChild(returnButton!)
         addChild(highscoreNameLabel!)
         
-        addChild(highscore1!)
-        addChild(highscore2!)
-        addChild(highscore3!)
         
         addChild(highscoreValue1!)
         addChild(highscoreValue2!)
@@ -99,6 +85,39 @@ class HighscoreScene: SKScene {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func update(_ currentTime: TimeInterval) {
+        //print(scoreGetter ?? 90)
+        
+        if !passedOnce {
+            print("IM HERE ONCE")
+            if scoreGetter ?? 90 > Int(highscoreValue1.text!)!{
+                print("IM HIGHER THAN 10000")
+                highscoreValue1.text = "\(scoreGetter!)"
+                PlaceHolder1 = scoreGetter
+                higherThan1 = true
+            }
+            
+            if scoreGetter ?? 90 > Int(highscoreValue2.text!)! && !higherThan1{
+                print("IM HIGHER THAN 1000")
+                highscoreValue2.text = "\(scoreGetter!)"
+                
+                PlaceHolder2 = scoreGetter
+                
+                higherThan2 = true
+            }
+            
+            if scoreGetter ?? 90 > Int(highscoreValue3.text!)! && !higherThan1 && !higherThan2{
+                print("IM HIGHER THAN 1000")
+                highscoreValue3.text = "\(scoreGetter!)"
+                PlaceHolder3 = scoreGetter
+                higherThan3 = true
+            }
+            
+            passedOnce = true
+        }
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -122,6 +141,10 @@ class HighscoreScene: SKScene {
     @objc func changeSceneMenu(){ //change scene after 1 sec
         let reveal = SKTransition.reveal(with: .left, duration: 0.6)
         let newScene = MenuScene(size:self.size)
+        newScene.scoreGetter = Int?(self.scoreGetter!)
+        newScene.PlaceHolder1 = Int?(self.PlaceHolder1!)
+        newScene.PlaceHolder2 = Int?(self.PlaceHolder2!)
+        newScene.PlaceHolder3 = Int?(self.PlaceHolder3!)
         self.view?.presentScene(newScene, transition: reveal)
     }
 }

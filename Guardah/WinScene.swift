@@ -4,7 +4,6 @@ import SpriteKit
 
 class WinScene: SKScene {
     
-    
     var background: SKSpriteNode!
     let screenSize: CGRect = UIScreen.main.bounds
     var returnButton: SKSpriteNode!
@@ -13,7 +12,11 @@ class WinScene: SKScene {
     var message1: SKLabelNode!
     var message2: SKLabelNode!
     var message3: SKLabelNode!
+    var scoreGetter: Int?
     
+    var PlaceHolder1: Int?
+    var PlaceHolder2: Int?
+    var PlaceHolder3: Int?
     
     var highscoreValue1: SKLabelNode!
     var highscoreValue2: SKLabelNode!
@@ -101,6 +104,11 @@ class WinScene: SKScene {
     @objc func changeSceneMenu(){ //change scene after 0.6 sec
         let reveal = SKTransition.reveal(with: .left, duration: 0.6)
         let newScene = MenuScene(size:self.size)
+        print("pressing passing a ", scoreGetter!)
+        newScene.scoreGetter = Int?(self.scoreGetter!)
+        newScene.PlaceHolder1 = Int?(self.PlaceHolder1!)
+        newScene.PlaceHolder2 = Int?(self.PlaceHolder2!)
+        newScene.PlaceHolder3 = Int?(self.PlaceHolder3!)   
         self.view?.presentScene(newScene, transition: reveal)
     }
 }

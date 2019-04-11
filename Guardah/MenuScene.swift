@@ -10,6 +10,7 @@ import Foundation
 import SpriteKit
 
 class MenuScene: SKScene {
+    var scoreGetter: Int?
     
     var startButton: SKSpriteNode!
     var optionsButton: SKSpriteNode!
@@ -18,6 +19,10 @@ class MenuScene: SKScene {
     var gameNameLabel: SKLabelNode!
     var spriteLogo: SKSpriteNode!
     var fireParticle: SKEmitterNode!
+    
+    var PlaceHolder1: Int?
+    var PlaceHolder2: Int?
+    var PlaceHolder3: Int?
     
     var background: SKSpriteNode!
     let screenSize: CGRect = UIScreen.main.bounds
@@ -28,6 +33,7 @@ class MenuScene: SKScene {
     override init(size: CGSize) {
         super.init(size: size)
         
+        //print(scoreGetter)
         selectionSound.autoplayLooped = false;
         
         fireParticle = SKEmitterNode(fileNamed: "MyFireParticle.sks")
@@ -85,6 +91,7 @@ class MenuScene: SKScene {
         //audio
         addChild(selectionSound)
         addChild(backgroundMusic)
+        
     }
     
     
@@ -115,6 +122,7 @@ class MenuScene: SKScene {
                 if node.contains(t.location(in:self))// do whatever here
                 {
                    self.selectionSound.run(SKAction.play());
+                    print("the value in main menu of scoreGetter", self.scoreGetter!)
                    self.perform(#selector(self.changeSceneHighScore), with: nil, afterDelay: 0.6)
                 }
             }
@@ -138,6 +146,11 @@ class MenuScene: SKScene {
     @objc func changeSceneHighScore(){ //change scene after 1 sec
         let reveal = SKTransition.reveal(with: .right, duration: 0.6)
         let newScene = HighscoreScene(size:self.size)
+        newScene.scoreGetter = Int?(self.scoreGetter!)
+        newScene.PlaceHolder1 = Int?(self.PlaceHolder1!)
+        newScene.PlaceHolder2 = Int?(self.PlaceHolder2!)
+        newScene.PlaceHolder3 = Int?(self.PlaceHolder3!)        
+        
         self.view?.presentScene(newScene, transition: reveal)
     }
 }

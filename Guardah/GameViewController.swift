@@ -10,7 +10,13 @@ import UIKit
 import SpriteKit
 import GameplayKit
 
+class Singleton {
+    let shared = Int()
+    
+}
+
 class GameViewController: UIViewController {
+   // var scene: HighscoreScene!
     var scene: GameScene!
     
     override func viewDidLoad() {
@@ -20,6 +26,7 @@ class GameViewController: UIViewController {
             // Load the SKScene from 'GameScene.sks'
             // Set the scale mode to scale to fit the window
             //scene = MenuScene(size: self.view.frame.size)
+            //scene = HighscoreScene(size: self.view.frame.size)
             scene = GameScene(size: self.view.frame.size)
 
             scene.scaleMode = .aspectFill

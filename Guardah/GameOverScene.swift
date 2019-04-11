@@ -15,6 +15,10 @@ class GameoverScene: SKScene {
     var message3: SKLabelNode!
     
     
+    var PlaceHolder1: Int?
+    var PlaceHolder2: Int?
+    var PlaceHolder3: Int?    
+    
     var highscoreValue1: SKLabelNode!
     var highscoreValue2: SKLabelNode!
     var highscoreValue3: SKLabelNode!
