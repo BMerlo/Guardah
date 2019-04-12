@@ -12,6 +12,11 @@ import SpriteKit
 
 class OptionsScene: SKScene {
     
+    var scoreGetter: Int?
+    var difficultyGetter: Int?
+    var PlaceHolder1: Int?
+    var PlaceHolder2: Int?
+    var PlaceHolder3: Int?
     
     var easyButton: SKSpriteNode!
     var mediumButton: SKSpriteNode!
@@ -80,6 +85,27 @@ class OptionsScene: SKScene {
             //TODO: - Create a transition
             //scene?.view?.presentScene(GameScene(size: self.frame.size))
             enumerateChildNodes(withName: "//*", using: { ( node, stop) in
+                if node.name == "easyBtn" {
+                    if node.contains(t.location(in:self))// do whatever here
+                    {
+                        self.selectionSound.run(SKAction.play());
+                        self.difficultyGetter = 1
+                    }
+                }
+                if node.name == "mediumBtn" {
+                    if node.contains(t.location(in:self))// do whatever here
+                    {
+                        self.selectionSound.run(SKAction.play());
+                        self.difficultyGetter = 2
+                    }
+                }
+                if node.name == "hardBtn" {
+                    if node.contains(t.location(in:self))// do whatever here
+                    {
+                        self.selectionSound.run(SKAction.play());
+                        self.difficultyGetter = 3
+                    }
+                }
                 if node.name == "returnBtn" {
                     if node.contains(t.location(in:self))// do whatever here
                     {
@@ -96,6 +122,11 @@ class OptionsScene: SKScene {
     @objc func changeSceneMenu(){ //change scene after 0.6 sec
         let reveal = SKTransition.reveal(with: .left, duration: 0.6)
         let newScene = MenuScene(size:self.size)
+        newScene.scoreGetter = Int?(self.scoreGetter!)
+        newScene.difficultyGetter = Int?(self.difficultyGetter!)
+        newScene.PlaceHolder1 = Int?(self.PlaceHolder1!)
+        newScene.PlaceHolder2 = Int?(self.PlaceHolder2!)
+        newScene.PlaceHolder3 = Int?(self.PlaceHolder3!)
         self.view?.presentScene(newScene, transition: reveal)
     }
 }

@@ -10,7 +10,11 @@ let powerUpCategory: UInt32 = 0x00000001 << 5
 
 class GameScene: SKScene,SKPhysicsContactDelegate {
     
+    var showmeOnce = true
+    
+    
     var scoreGetter: Int?
+    var difficultyGetter: Int?
     
     var background: SKSpriteNode!
     var background2: SKSpriteNode!
@@ -65,6 +69,9 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var timerToShoot = Timer()
     var enemiesTimer = Timer()
     var timerAI = Timer()
+    var timerToDiagAttack = Timer()
+    var canLoseLifeTimer = Timer()
+    var spawnBuff = Timer()
     
     //MOVES
     var moveShot:SKAction!
@@ -81,6 +88,10 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var movePowerUp2LeftToRight:SKAction!
     var movePowerUp2RightToLeft:SKAction!
     
+    //move attack to 5 and 7
+    var moveAttackTo5:SKAction!
+    var moveAttackTo7:SKAction!
+    
     var bossActive = false
     var bossHeadAlive = true
     var bossRightArmlive = true
@@ -96,11 +107,13 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     
     var moveBossArmLeft:SKAction!
     var moveBossArmRight:SKAction!
-    var moveBossArmUp:SKAction!
-    var moveBossArmDown:SKAction!
+    var moveUp:SKAction!
+    var moveDown:SKAction!
     
     //MOVE ATTACK BOSS
     var moveBallDown:SKAction!
+    
+    var canLoseLife = true
     
     //powerups
     var powerUp1exists = true
@@ -115,16 +128,12 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var enemyWave1exists = true
     var enemyWave2exists = true
     var enemyWave3exists = true
-    
-    var enemyHolder4:SKSpriteNode!
-    var enemyHolder5:SKSpriteNode!
-    var enemyHolder6:SKSpriteNode!
-    
-    var enemyHolder7:SKSpriteNode!
-    var enemyHolder8:SKSpriteNode!
-    var enemyHolder9:SKSpriteNode!
+    var enemyWave4exists = true
     
     var RandomNumber = 100
+    var RandomNumberAI = 60
+    var RandomNumberYes = 100
+    var RandomNumberRight = 100
     
     var enemy1: SKSpriteNode!
     var enemy2: SKSpriteNode!
@@ -132,6 +141,9 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var enemy4: SKSpriteNode!
     var enemy5: SKSpriteNode!
     var enemy6: SKSpriteNode!
+    var enemy7: SKSpriteNode!
+    var enemy8: SKSpriteNode!
+    var enemy9: SKSpriteNode!
     
     
     //highscores
@@ -147,6 +159,8 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     
     var enemiesWaveCounter = 0
     
+    var attackSprites :[SKSpriteNode] = [SKSpriteNode]()
+    
     //sounds
     let attackSfx = SKAction.playSoundFileNamed("/Sfx/shot2.mp3", waitForCompletion: false)
     let enemyAttackSfx = SKAction.playSoundFileNamed("/Sfx/shot3.mp3", waitForCompletion: false)
@@ -160,13 +174,6 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     
     override init(size: CGSize) {
         super.init(size: size)
-        
-        //score
-        PlaceHolder1 = 1000
-        PlaceHolder2 = 500
-        PlaceHolder3 = 100
-        
-       
         
         enemy1 = SKSpriteNode(texture: SKTexture(imageNamed: "enemy1"))
         enemy1.setScale(0.5)
@@ -254,6 +261,49 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         addChild(enemy5)
         addChild(enemy6)
         
+        enemy7 = SKSpriteNode(texture: SKTexture(imageNamed: "enemy1"))
+        enemy7.setScale(0.5)
+        enemy7.position = CGPoint(x: screenSize.width * 0.15, y:screenSize.height * 1.1)
+        enemy7?.physicsBody = SKPhysicsBody(rectangleOf: (enemy7?.frame.size)!)
+        enemy7?.physicsBody?.affectedByGravity = false;
+        enemy7?.physicsBody?.allowsRotation = false;
+        enemy7?.physicsBody?.mass = 2.0
+        enemy7.name = "enemy7"
+        
+        enemy7?.physicsBody?.categoryBitMask = enemyCategory
+        enemy7?.physicsBody?.contactTestBitMask = playerCategory | attackPCategory
+        enemy7?.physicsBody?.collisionBitMask = playerCategory | attackPCategory
+        
+        enemy8 = SKSpriteNode(texture: SKTexture(imageNamed: "enemy2"))
+        enemy8.setScale(0.5)
+        enemy8.position = CGPoint(x: screenSize.width * 0.45, y:screenSize.height * 1.1)
+        enemy8?.physicsBody = SKPhysicsBody(rectangleOf: (enemy8?.frame.size)!)
+        enemy8?.physicsBody?.affectedByGravity = false;
+        enemy8?.physicsBody?.allowsRotation = false;
+        enemy8?.physicsBody?.mass = 2.0
+        enemy8.name = "enemy8"
+        
+        enemy8?.physicsBody?.categoryBitMask = enemyCategory
+        enemy8?.physicsBody?.contactTestBitMask = playerCategory | attackPCategory
+        enemy8?.physicsBody?.collisionBitMask = playerCategory | attackPCategory
+        
+        enemy9 = SKSpriteNode(texture: SKTexture(imageNamed: "enemy3"))
+        enemy9.setScale(0.5)
+        enemy9.position = CGPoint(x: screenSize.width * 0.75, y:screenSize.height * 1.1)
+        enemy9?.physicsBody = SKPhysicsBody(rectangleOf: (enemy9?.frame.size)!)
+        enemy9?.physicsBody?.affectedByGravity = false;
+        enemy9?.physicsBody?.allowsRotation = false;
+        enemy9?.physicsBody?.mass = 2.0
+        enemy9.name = "enemy9"
+        
+        enemy9?.physicsBody?.categoryBitMask = enemyCategory
+        enemy9?.physicsBody?.contactTestBitMask = playerCategory | attackPCategory
+        enemy9?.physicsBody?.collisionBitMask = playerCategory | attackPCategory
+        
+        addChild(enemy7)
+        addChild(enemy8)
+        addChild(enemy9)
+        
         backgroundBossMusic.autoplayLooped = false;
         addChild(backgroundBossMusic)
         
@@ -266,6 +316,12 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
          let enemiesTimer = Timer.scheduledTimer(timeInterval: 6.0, target: self, selector: #selector(updateEnemiesSpawn(timer:)), userInfo: nil, repeats: true)
         
         let timerAI = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(BossRandomAI(timer:)), userInfo: nil, repeats: true)
+        
+        let timerToDiagAttack = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(enemiesRandomAI(timer:)), userInfo: nil, repeats: true)
+        
+        let canLoseLifeTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(resetCanLoseLife(timer:)), userInfo: nil, repeats: true)
+        
+        let spawnBuff = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(spawnBuffes(timer:)), userInfo: nil, repeats: true)
         
         //moves
         moveShot = SKAction.moveBy(x: 0, y: screenSize.height, duration: 1.6)
@@ -293,12 +349,14 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         
         moveBossArmLeft = SKAction.moveBy(x: -screenSize.width * 0.13, y: 0.0, duration: 2.0)
         moveBossArmRight = SKAction.moveBy(x: screenSize.width * 0.13, y: 0.0, duration: 2.0)
-        moveBossArmUp = SKAction.moveBy(x: 0.0, y: screenSize.height * 0.1, duration: 2.0)
-        moveBossArmDown = SKAction.moveBy(x: 0.0, y: -screenSize.height * 0.1, duration: 2.0)
+        moveUp = SKAction.moveBy(x: 0.0, y: screenSize.height * 0.5, duration: 10.0)
+        moveDown = SKAction.moveBy(x: 0.0, y: -screenSize.height * 0.5, duration: 10.0)
         
         //MOVE ATTACK BOSS
         moveBallDown = SKAction.moveBy(x: 0, y: -screenSize.height * 2, duration: 30.6)
         
+        moveAttackTo5 = SKAction.sequence([moveBossDiagLeftToRightDown, moveBossDiagLeftToRightDown,moveBossDiagLeftToRightDown, moveBossDiagLeftToRightDown])
+        moveAttackTo7 = SKAction.sequence([moveBossDiagRightToLeftDown, moveBossDiagRightToLeftDown,moveBossDiagRightToLeftDown, moveBossDiagRightToLeftDown])
         
         background = SKSpriteNode(texture: SKTexture(imageNamed: "Background"))
         background.position = CGPoint(x: screenSize.width/2, y:0)
@@ -389,7 +447,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         let borderBody = SKPhysicsBody(edgeLoopFrom: self.frame)
         self.physicsBody = borderBody
         self.physicsBody?.categoryBitMask = wallCategory
-        self.physicsBody?.contactTestBitMask = playerCategory
+        self.physicsBody?.contactTestBitMask = playerCategory | attackPCategory
         self.physicsBody?.contactTestBitMask = enemyCategory
         self.physicsWorld.contactDelegate = self
         
@@ -423,7 +481,6 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             print("player first")
         }
         
-        
         if contact.bodyA.categoryBitMask == playerCategory && contact.bodyB.categoryBitMask == powerUpCategory {
             run(powerUpSound)
             playerPower = playerPower + 1
@@ -432,14 +489,24 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             print("player power", playerPower)
         }
         
+        if contact.bodyA.categoryBitMask == wallCategory && contact.bodyB.categoryBitMask == attackPCategory {
+           //print("shoot on wall")
+            contact.bodyB.node?.removeFromParent()
+        }
+        
+        
         if contact.bodyA.categoryBitMask == playerCategory && contact.bodyB.categoryBitMask == enemyCategory {
             print("enemy with player")
             run(playerDied)
+            
             PlayerSprite.run(SKAction.repeat(explosion1, count: 1), completion: {
                 //contact.bodyA.node?.removeFromParent()
                 
                 self.PlayerSprite.isHidden = true
+                if self.canLoseLife {
                 self.playerLives = self.playerLives - 1
+                self.canLoseLife = false
+                }
                 self.playerPower = 0
                 contact.bodyB.node?.removeFromParent()
             })
@@ -448,8 +515,10 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             {
                 //score = score + 1000
                 run(ballDied)
-                redBallHolderL.removeFromParent()
-                redBallHolderR.removeFromParent()
+                if difficultyGetter == 3 {
+                    redBallHolderL.removeFromParent()
+                    redBallHolderR.removeFromParent()
+                }
                 redBallHolder.run(SKAction.repeat(explosion2, count: 1), completion: {
                     contact.bodyA.node?.removeFromParent()
                 })
@@ -457,9 +526,10 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             
             if(contact.bodyA.node?.name == "redBallL")
             {
-                //score = score + 1000
-                redBallHolder.removeFromParent()
-                redBallHolderR.removeFromParent()
+                if difficultyGetter == 3 {
+                    redBallHolderR.removeFromParent()
+                    redBallHolder.removeFromParent()
+                }
                 redBallHolderL.run(SKAction.repeat(explosion2, count: 1), completion: {
                     contact.bodyA.node?.removeFromParent()
                 })
@@ -468,22 +538,38 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             if(contact.bodyA.node?.name == "redBallR")
             {
                 //score = score + 1000
-                redBallHolderL.removeFromParent()
-                redBallHolder.removeFromParent()
+                if difficultyGetter == 3 {
+                    redBallHolderL.removeFromParent()
+                    redBallHolder.removeFromParent()
+                }
+                
                 redBallHolderR.run(SKAction.repeat(explosion2, count: 1), completion: {
                     contact.bodyA.node?.removeFromParent()
                 })
             }
             
+            if(contact.bodyA.node?.name == "enemy1")
+            {
+                enemy1.run(SKAction.repeat(explosion2, count: 1), completion: {
+                    self.enemy1.isHidden = true
+                    self.enemy1.position.x = -10
+                })
+            }
+            
         }
-        
+        //fisica
         if contact.bodyA.categoryBitMask == playerCategory && contact.bodyB.categoryBitMask == attackECategory {
             print("player with enemyAttack")
-          run(playerDied)
+            run(playerDied)
+            
             PlayerSprite.run(SKAction.repeat(explosion1, count: 1), completion: {
                 //contact.bodyA.node?.removeFromParent()
-                self.PlayerSprite.isHidden = true
-                self.playerLives = self.playerLives - 1
+                
+                if self.canLoseLife {
+                    self.PlayerSprite.isHidden = true
+                    self.playerLives = self.playerLives - 1
+                    self.canLoseLife = false
+                }
                 self.playerPower = 0
             })
             
@@ -492,13 +578,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         
         if contact.bodyA.categoryBitMask == enemyCategory && contact.bodyB.categoryBitMask == attackPCategory {
            // print("attack working")
-            if(contact.bodyA.node?.name == "boss")
-            {
-                print("boss")
-                //score = score + 1000
-                //bossDead = true
-                
-            }
+            
             if(contact.bodyA.node?.name == "enemy1")
             {
                 print("enemy1")
@@ -514,7 +594,6 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                 if playerPower == 3 {
                     score = score + 1000
                 }
-                
                 
                 enemy1.run(SKAction.repeat(explosion2, count: 1), completion: {
                    self.enemy1.isHidden = true
@@ -582,6 +661,47 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                     self.enemy6.position.x = self.screenSize.width + 100
                 })
             }
+            if(contact.bodyA.node?.name == "enemy7")
+            {
+                print("enemy7")//hidden bonus points
+                if playerPower == 0 {
+                    score = score + 100
+                }
+                if playerPower == 1 {
+                    score = score + 300
+                }
+                if playerPower == 2 {
+                    score = score + 500
+                }
+                if playerPower == 3 {
+                    score = score + 1000
+                }
+                //contact.bodyA.node?.removeFromParent()
+                enemy7.run(SKAction.repeat(explosion2, count: 1), completion: {
+                    self.enemy7.isHidden = true
+                    self.enemy7.position.x = self.screenSize.width + 100
+                })
+            }
+            if(contact.bodyA.node?.name == "enemy8")
+            {
+                print("enemy8")
+                score = score + 200
+                
+                enemy8.run(SKAction.repeat(explosion2, count: 1), completion: {
+                    self.enemy8.isHidden = true
+                    self.enemy8.position.x = self.screenSize.width + 100
+                })
+            }
+            if(contact.bodyA.node?.name == "enemy9")
+            {
+                print("enemy9")
+                score = score + 400
+                
+                enemy9.run(SKAction.repeat(explosion2, count: 1), completion: {
+                    self.enemy9.isHidden = true
+                    self.enemy9.position.x = self.screenSize.width + 100
+                })
+            }
             if(contact.bodyA.node?.name == "bossLeftArm")
             {
                 run(partDied)
@@ -639,8 +759,10 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             if(contact.bodyA.node?.name == "redBall")
             {
                 score = score + 1000
+                if difficultyGetter == 3 {
                 redBallHolderL.removeFromParent()
                 redBallHolderR.removeFromParent()
+                }
                     redBallHolder.run(SKAction.repeat(explosion2, count: 1), completion: {
                         contact.bodyA.node?.removeFromParent()
                     })
@@ -648,6 +770,152 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             contact.bodyB.node?.removeFromParent()
             
         }
+    }
+    
+    @objc func enemiesRandomAI(timer: Timer){
+        RandomNumberAI = Int(arc4random_uniform(UInt32(100)))
+        
+        if RandomNumberAI > 0 && RandomNumberAI < 30{
+            if !enemyWave3exists {
+                if enemy7.position.y > -10 {
+                    var enemyAttack10:SKSpriteNode!
+                    enemyAttack10 = SKSpriteNode(imageNamed: "enemyShot")
+                    run(enemyAttackSfx)
+                    enemyAttack10.setScale(0.5)
+                    enemyAttack10.position = CGPoint(x: enemy7.position.x, y: enemy7.position.y - 10)
+                    
+                    enemyAttack10?.physicsBody = SKPhysicsBody(rectangleOf: (enemyAttack10?.frame.size)!)
+                    enemyAttack10?.physicsBody?.affectedByGravity = false;
+                    enemyAttack10?.physicsBody?.allowsRotation = false;
+                    enemyAttack10?.physicsBody?.mass = 2.0
+                    enemyAttack10?.physicsBody?.categoryBitMask = attackECategory
+                    enemyAttack10?.physicsBody?.contactTestBitMask = playerCategory
+                    enemyAttack10?.physicsBody?.collisionBitMask = playerCategory
+                    self.addChild(enemyAttack10)
+                    
+                    //enemyAttack10.run(moveAttackTo7)
+                    enemyAttack10.run(SKAction.repeat(self.moveAttackTo7, count: 4), completion: {
+                        enemyAttack10.isHidden = true
+                        enemyAttack10.position = CGPoint(x: -1000, y: -1000)
+                    })
+                }
+                if enemy8.position.y > -10 {
+                    var enemyAttack11:SKSpriteNode!
+                    enemyAttack11 = SKSpriteNode(imageNamed: "enemyShot")
+                    run(enemyAttackSfx)
+                    enemyAttack11.setScale(0.5)
+                    enemyAttack11.position = CGPoint(x: enemy8.position.x, y: enemy8.position.y - 10)
+                    
+                    enemyAttack11?.physicsBody = SKPhysicsBody(rectangleOf: (enemyAttack11?.frame.size)!)
+                    enemyAttack11?.physicsBody?.affectedByGravity = false;
+                    enemyAttack11?.physicsBody?.allowsRotation = false;
+                    enemyAttack11?.physicsBody?.mass = 2.0
+                    enemyAttack11?.physicsBody?.categoryBitMask = attackECategory
+                    enemyAttack11?.physicsBody?.contactTestBitMask = playerCategory
+                    enemyAttack11?.physicsBody?.collisionBitMask = playerCategory
+                    self.addChild(enemyAttack11)
+                    //enemyAttack11.run(moveAttackTo7)
+                    enemyAttack11.run(SKAction.repeat(self.moveAttackTo7, count: 4), completion: {
+                        enemyAttack11.isHidden = true
+                        enemyAttack11.position = CGPoint(x: -1000, y: -1000)
+                    })
+                }
+                if enemy9.position.y > -10 {
+                    var enemyAttack12:SKSpriteNode!
+                    enemyAttack12 = SKSpriteNode(imageNamed: "enemyShot")
+                    run(enemyAttackSfx)
+                    enemyAttack12.setScale(0.5)
+                    enemyAttack12.position = CGPoint(x: enemy9.position.x, y: enemy9.position.y - 10)
+                    
+                    enemyAttack12?.physicsBody = SKPhysicsBody(rectangleOf: (enemyAttack12?.frame.size)!)
+                    enemyAttack12?.physicsBody?.affectedByGravity = false;
+                    enemyAttack12?.physicsBody?.allowsRotation = false;
+                    enemyAttack12?.physicsBody?.mass = 2.0
+                    enemyAttack12?.physicsBody?.categoryBitMask = attackECategory
+                    enemyAttack12?.physicsBody?.contactTestBitMask = playerCategory
+                    enemyAttack12?.physicsBody?.collisionBitMask = playerCategory
+                    self.addChild(enemyAttack12)
+                   // enemyAttack12.run(moveAttackTo7)
+                    enemyAttack12.run(SKAction.repeat(self.moveAttackTo7, count: 4), completion: {
+                        enemyAttack12.isHidden = true
+                        enemyAttack12.position = CGPoint(x: -1000, y: -1000)
+                    })
+                }
+            }
+        }
+        
+        if RandomNumberAI > 70 && RandomNumberAI < 100{
+            if !enemyWave3exists {
+                if enemy7.position.y > -10 {
+                    var enemyAttack13:SKSpriteNode!
+                    enemyAttack13 = SKSpriteNode(imageNamed: "enemyShot")
+                    run(enemyAttackSfx)
+                    enemyAttack13.setScale(0.5)
+                    enemyAttack13.position = CGPoint(x: enemy7.position.x, y: enemy7.position.y - 10)
+                    
+                    enemyAttack13?.physicsBody = SKPhysicsBody(rectangleOf: (enemyAttack13?.frame.size)!)
+                    enemyAttack13?.physicsBody?.affectedByGravity = false;
+                    enemyAttack13?.physicsBody?.allowsRotation = false;
+                    enemyAttack13?.physicsBody?.mass = 2.0
+                    enemyAttack13?.physicsBody?.categoryBitMask = attackECategory
+                    enemyAttack13?.physicsBody?.contactTestBitMask = playerCategory
+                    enemyAttack13?.physicsBody?.collisionBitMask = playerCategory
+                    self.addChild(enemyAttack13)
+                    
+                    //enemyAttack10.run(moveAttackTo7)
+                    enemyAttack13.run(SKAction.repeat(self.moveAttackTo5, count: 4), completion: {
+                        enemyAttack13.isHidden = true
+                        enemyAttack13.position = CGPoint(x: -1000, y: -1000)
+                    })
+                }
+                if enemy8.position.y > -10 {
+                    var enemyAttack14:SKSpriteNode!
+                    enemyAttack14 = SKSpriteNode(imageNamed: "enemyShot")
+                    run(enemyAttackSfx)
+                    enemyAttack14.setScale(0.5)
+                    enemyAttack14.position = CGPoint(x: enemy8.position.x, y: enemy8.position.y - 10)
+                    
+                    enemyAttack14?.physicsBody = SKPhysicsBody(rectangleOf: (enemyAttack14?.frame.size)!)
+                    enemyAttack14?.physicsBody?.affectedByGravity = false;
+                    enemyAttack14?.physicsBody?.allowsRotation = false;
+                    enemyAttack14?.physicsBody?.mass = 2.0
+                    enemyAttack14?.physicsBody?.categoryBitMask = attackECategory
+                    enemyAttack14?.physicsBody?.contactTestBitMask = playerCategory
+                    enemyAttack14?.physicsBody?.collisionBitMask = playerCategory
+                    self.addChild(enemyAttack14)
+                    //enemyAttack11.run(moveAttackTo7)
+                    enemyAttack14.run(SKAction.repeat(self.moveAttackTo5, count: 4), completion: {
+                        enemyAttack14.isHidden = true
+                        enemyAttack14.position = CGPoint(x: -1000, y: -1000)
+                    })
+                }
+                if enemy9.position.y > -10 {
+                    var enemyAttack15:SKSpriteNode!
+                    enemyAttack15 = SKSpriteNode(imageNamed: "enemyShot")
+                    run(enemyAttackSfx)
+                    enemyAttack15.setScale(0.5)
+                    enemyAttack15.position = CGPoint(x: enemy9.position.x, y: enemy9.position.y - 10)
+                    
+                    enemyAttack15?.physicsBody = SKPhysicsBody(rectangleOf: (enemyAttack15?.frame.size)!)
+                    enemyAttack15?.physicsBody?.affectedByGravity = false;
+                    enemyAttack15?.physicsBody?.allowsRotation = false;
+                    enemyAttack15?.physicsBody?.mass = 2.0
+                    enemyAttack15?.physicsBody?.categoryBitMask = attackECategory
+                    enemyAttack15?.physicsBody?.contactTestBitMask = playerCategory
+                    enemyAttack15?.physicsBody?.collisionBitMask = playerCategory
+                    self.addChild(enemyAttack15)
+                    // enemyAttack12.run(moveAttackTo7)
+                    enemyAttack15.run(SKAction.repeat(self.moveAttackTo5, count: 4), completion: {
+                        enemyAttack15.isHidden = true
+                        enemyAttack15.position = CGPoint(x: -1000, y: -1000)
+                    })
+                }
+            }
+          }
+    }
+    
+    @objc func resetCanLoseLife(timer: Timer){
+        canLoseLife = true
     }
     
     @objc func fire(timer: Timer)
@@ -670,7 +938,11 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         enemyAttack1?.physicsBody?.contactTestBitMask = playerCategory
         enemyAttack1?.physicsBody?.collisionBitMask = playerCategory
                 self.addChild(enemyAttack1)
-                enemyAttack1.run(moveEnemyShot)
+              //  enemyAttack1.run(moveEnemyShot)
+            enemyAttack1.run(SKAction.repeat(self.moveEnemyShot, count: 1), completion: {
+                enemyAttack1.isHidden = true
+                enemyAttack1.position = CGPoint(x: -1000, y: -1000)
+            })
         }
             
         if enemy2.position.x > 0 {
@@ -688,7 +960,11 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         enemyAttack2?.physicsBody?.contactTestBitMask = playerCategory
         enemyAttack2?.physicsBody?.collisionBitMask = playerCategory
             self.addChild(enemyAttack2)
-            enemyAttack2.run(moveEnemyShot)
+            //enemyAttack2.run(moveEnemyShot)
+            enemyAttack2.run(SKAction.repeat(self.moveEnemyShot, count: 1), completion: {
+                enemyAttack2.isHidden = true
+                enemyAttack2.position = CGPoint(x: -1000, y: -1000)
+            })
         }
            
         if enemy3.position.x > 0 {
@@ -719,7 +995,13 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             shootAtPlayer = SKAction.moveBy(x: CGFloat(distanceOnX) * 2, y: CGFloat(distanceOnY * -2), duration: 10.0)
             
             self.addChild(enemyAttack3)
-            enemyAttack3.run(shootAtPlayer)
+           // enemyAttack3.run(shootAtPlayer)
+            enemyAttack3.run(SKAction.repeat(shootAtPlayer, count: 1), completion: {
+                enemyAttack3.isHidden = true
+                enemyAttack3.position = CGPoint(x: -1000, y: -1000)
+            })
+            
+            
         }
             
         }
@@ -754,11 +1036,28 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                 enemyAttack7?.physicsBody?.contactTestBitMask = playerCategory
                 enemyAttack7?.physicsBody?.collisionBitMask = playerCategory
             
-            self.addChild(enemyAttack5)
-            enemyAttack5.run(moveEnemyShot)
+                self.addChild(enemyAttack5)
+                //   enemyAttack5.run(moveEnemyShot)
+                
+                enemyAttack5.run(SKAction.repeat(self.moveEnemyShot, count: 1), completion: {
+                    enemyAttack5.isHidden = true
+                    enemyAttack5.position = CGPoint(x: -1000, y: -1000)
+                })
                 self.addChild(enemyAttack7)
-                enemyAttack7.run(moveEnemyShot)
+                //enemyAttack7.run(moveEnemyShot)
+                
+                enemyAttack7.run(SKAction.repeat(self.moveEnemyShot, count: 1), completion: {
+                    enemyAttack7.isHidden = true
+                    enemyAttack7.position = CGPoint(x: -1000, y: -1000)
+                })
             }
+        }
+        
+        if !enemyWave3exists {
+            if enemy7.position.y > -10 {
+                print("wave 3 trying to shoot")
+            }
+            
         }
     }
     
@@ -775,9 +1074,57 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         //RandomNumber = Int.random(in: 0 ..< 100)
     }
     
+    @objc func spawnBuffes(timer: Timer){
+        //papa
+        if difficultyGetter == 1 {
+            RandomNumberYes = Int(arc4random_uniform(UInt32(100)))
+            RandomNumberRight = Int(arc4random_uniform(UInt32(100)))
+            if RandomNumberYes > 0 && RandomNumberRight < 50{
+                if RandomNumberRight > 0 && RandomNumberRight <= 50{
+                    var powerUp: SKSpriteNode!
+                    powerUp = SKSpriteNode(texture: SKTexture(imageNamed: "PowerUp"))
+                    powerUp.position = CGPoint(x: screenSize.width * 0.1 , y:screenSize.height * 1.05)
+                    powerUp?.physicsBody = SKPhysicsBody(rectangleOf: (powerUp?.frame.size)!)
+                    powerUp?.physicsBody?.affectedByGravity = false;
+                    powerUp?.physicsBody?.allowsRotation = false;
+                    powerUp?.physicsBody?.mass = 2.0
+                    
+                    powerUp?.physicsBody?.categoryBitMask = powerUpCategory
+                    powerUp?.physicsBody?.contactTestBitMask = playerCategory
+                    powerUp?.physicsBody?.collisionBitMask = playerCategory
+                    
+                    addChild(powerUp)
+                    let sequencePowerUpto5 = SKAction.sequence([moveAttackTo5, moveAttackTo5, moveAttackTo5])
+                    powerUp.run(sequencePowerUpto5)
+                    
+                }
+                else {
+                    var powerUp: SKSpriteNode!
+                    powerUp = SKSpriteNode(texture: SKTexture(imageNamed: "PowerUp"))
+                    powerUp.position = CGPoint(x: screenSize.width * 1.1 , y:screenSize.height * 1.05)
+                    powerUp?.physicsBody = SKPhysicsBody(rectangleOf: (powerUp?.frame.size)!)
+                    powerUp?.physicsBody?.affectedByGravity = false;
+                    powerUp?.physicsBody?.allowsRotation = false;
+                    powerUp?.physicsBody?.mass = 2.0
+                    
+                    powerUp?.physicsBody?.categoryBitMask = powerUpCategory
+                    powerUp?.physicsBody?.contactTestBitMask = playerCategory
+                    powerUp?.physicsBody?.collisionBitMask = playerCategory
+                    
+                    addChild(powerUp)
+                    let sequencePowerUpto7 = SKAction.sequence([moveAttackTo7, moveAttackTo7,moveAttackTo7])
+                    powerUp.run(sequencePowerUpto7)
+                }
+            }
+        }
+        
+    }
+    
+    
+    
     @objc func fire2(timer: Timer)
     {
-        // print("I got called")
+        //acati
         if !enemyWave2exists{
             if enemy4.position.x < screenSize.width + 10 {
             var enemyAttack4:SKSpriteNode!
@@ -829,6 +1176,100 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             enemyAttack6.run(shootAtPlayer)
             }
         }
+        
+        if !enemyWave3exists
+        {
+            if enemy7.position.y > -10 {
+                var enemyAttack7:SKSpriteNode!
+                enemyAttack7 = SKSpriteNode(imageNamed: "enemyShot")
+                run(enemyAttackSfx)
+                enemyAttack7.setScale(0.5)
+                enemyAttack7.position = CGPoint(x: enemy7.position.x, y: enemy7.position.y - 10)
+                
+                enemyAttack7?.physicsBody = SKPhysicsBody(rectangleOf: (enemyAttack7?.frame.size)!)
+                enemyAttack7?.physicsBody?.affectedByGravity = false;
+                enemyAttack7?.physicsBody?.allowsRotation = false;
+                enemyAttack7?.physicsBody?.mass = 2.0
+                enemyAttack7?.physicsBody?.categoryBitMask = attackECategory
+                enemyAttack7?.physicsBody?.contactTestBitMask = playerCategory
+                enemyAttack7?.physicsBody?.collisionBitMask = playerCategory
+                self.addChild(enemyAttack7)
+                enemyAttack7.run(moveEnemyShot)
+            }
+            if enemy8.position.y > -10 {
+                var enemyAttack8:SKSpriteNode!
+                enemyAttack8 = SKSpriteNode(imageNamed: "enemyShot")
+                run(enemyAttackSfx)
+                enemyAttack8.setScale(0.5)
+                enemyAttack8.position = CGPoint(x: enemy8.position.x, y: enemy8.position.y - 10)
+                
+                enemyAttack8?.physicsBody = SKPhysicsBody(rectangleOf: (enemyAttack8?.frame.size)!)
+                enemyAttack8?.physicsBody?.affectedByGravity = false;
+                enemyAttack8?.physicsBody?.allowsRotation = false;
+                enemyAttack8?.physicsBody?.mass = 2.0
+                enemyAttack8?.physicsBody?.categoryBitMask = attackECategory
+                enemyAttack8?.physicsBody?.contactTestBitMask = playerCategory
+                enemyAttack8?.physicsBody?.collisionBitMask = playerCategory
+                self.addChild(enemyAttack8)
+                enemyAttack8.run(moveEnemyShot)
+            }
+            if enemy9.position.y > -10 {
+                var enemyAttack9:SKSpriteNode!
+                enemyAttack9 = SKSpriteNode(imageNamed: "enemyShot")
+                run(enemyAttackSfx)
+                enemyAttack9.setScale(0.5)
+                enemyAttack9.position = CGPoint(x: enemy9.position.x, y: enemy9.position.y - 10)
+                
+                enemyAttack9?.physicsBody = SKPhysicsBody(rectangleOf: (enemyAttack9?.frame.size)!)
+                enemyAttack9?.physicsBody?.affectedByGravity = false;
+                enemyAttack9?.physicsBody?.allowsRotation = false;
+                enemyAttack9?.physicsBody?.mass = 2.0
+                enemyAttack9?.physicsBody?.categoryBitMask = attackECategory
+                enemyAttack9?.physicsBody?.contactTestBitMask = playerCategory
+                enemyAttack9?.physicsBody?.collisionBitMask = playerCategory
+                self.addChild(enemyAttack9)
+                enemyAttack9.run(moveEnemyShot)
+            }
+        }
+        
+        //acatu
+        if !enemyWave4exists
+        {
+            if bossRightArmHolder.position.y > -10 && bossRightArmlive{
+                var bossAttack1:SKSpriteNode!
+                bossAttack1 = SKSpriteNode(imageNamed: "enemyShot")
+                run(enemyAttackSfx)
+                bossAttack1.setScale(0.5)
+                bossAttack1.position = CGPoint(x: bossRightArmHolder.position.x, y: bossRightArmHolder.position.y - 10)
+                
+                bossAttack1?.physicsBody = SKPhysicsBody(rectangleOf: (bossAttack1?.frame.size)!)
+                bossAttack1?.physicsBody?.affectedByGravity = false;
+                bossAttack1?.physicsBody?.allowsRotation = false;
+                bossAttack1?.physicsBody?.mass = 2.0
+                bossAttack1?.physicsBody?.categoryBitMask = attackECategory
+                bossAttack1?.physicsBody?.contactTestBitMask = playerCategory
+                bossAttack1?.physicsBody?.collisionBitMask = playerCategory
+                self.addChild(bossAttack1)
+                bossAttack1.run(moveEnemyShot)
+            }
+            if bossLeftArmHolder.position.y > -10 && bossLeftArmlive{
+                var bossAttack2:SKSpriteNode!
+                bossAttack2 = SKSpriteNode(imageNamed: "enemyShot")
+                run(enemyAttackSfx)
+                bossAttack2.setScale(0.5)
+                bossAttack2.position = CGPoint(x: bossLeftArmHolder.position.x, y: bossLeftArmHolder.position.y - 10)
+                
+                bossAttack2?.physicsBody = SKPhysicsBody(rectangleOf: (bossAttack2?.frame.size)!)
+                bossAttack2?.physicsBody?.affectedByGravity = false;
+                bossAttack2?.physicsBody?.allowsRotation = false;
+                bossAttack2?.physicsBody?.mass = 2.0
+                bossAttack2?.physicsBody?.categoryBitMask = attackECategory
+                bossAttack2?.physicsBody?.contactTestBitMask = playerCategory
+                bossAttack2?.physicsBody?.collisionBitMask = playerCategory
+                self.addChild(bossAttack2)
+                bossAttack2.run(moveEnemyShot)
+            }
+        }
     }
     
     
@@ -861,6 +1302,11 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                     {
                         let reveal = SKTransition.reveal(with: .up,                                                                duration: 1)
                         let newScene = GameoverScene(size:self.size)
+                        newScene.scoreGetter = Int(self.score);
+                        newScene.difficultyGetter = Int?(self.difficultyGetter!);
+                        newScene.PlaceHolder1 = Int?(self.PlaceHolder1!)
+                        newScene.PlaceHolder2 = Int?(self.PlaceHolder2!)
+                        newScene.PlaceHolder3 = Int?(self.PlaceHolder3!)
                         self.view?.presentScene(newScene, transition: reveal)
                         print("Button Pressed")
                     }
@@ -871,6 +1317,8 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                         let reveal = SKTransition.reveal(with: .up,                                                                duration: 1)
                         let newScene = WinScene(size:self.size)
                         print("pressing win", self.score)
+                        newScene.difficultyGetter = Int?(self.difficultyGetter!)
+                        //newScene.difficultyGetter = Int(self.difficultyGetter!);
                         newScene.scoreGetter = Int(self.score);
                         newScene.PlaceHolder1 = Int?(self.PlaceHolder1!)
                         newScene.PlaceHolder2 = Int?(self.PlaceHolder2!)
@@ -901,6 +1349,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                             playerShoot = SKSpriteNode(imageNamed: "shot4")
                             playerShoot?.setScale(0.9)
                         }
+                        self.attackSprites.append(playerShoot)
                         playerShoot.zPosition = 3
                         playerShoot?.physicsBody = SKPhysicsBody(rectangleOf: (playerShoot?.frame.size)!)
                         playerShoot?.physicsBody?.affectedByGravity = false;
@@ -908,12 +1357,16 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                         playerShoot?.physicsBody?.mass = 0.2
                         
                         playerShoot?.physicsBody?.categoryBitMask = attackPCategory
-                        playerShoot?.physicsBody?.contactTestBitMask = enemyCategory
+                        playerShoot?.physicsBody?.contactTestBitMask = enemyCategory | wallCategory
                         playerShoot?.physicsBody?.collisionBitMask = enemyCategory
                         
                         
                         playerShoot.position = CGPoint(x: self.PlayerSprite.position.x, y: self.PlayerSprite.position.y + 10)
-                        playerShoot.run(self.moveShot)
+                        //playerShoot.run(self.moveShot)
+                        playerShoot.run(SKAction.repeat(self.moveShot, count: 1), completion: {
+                            playerShoot.isHidden = true
+                            playerShoot.position = CGPoint(x: -1000, y: self.screenSize.height + 100)
+                        })
                         
                         self.addChild(playerShoot)
                     }
@@ -924,8 +1377,22 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         }
     
     override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
+       
         ScoreLabel.text = "\(score)"
+        /*
+        if showmeOnce {
+            print("scoreGetter =", scoreGetter!)
+            print("PlaceHolder3 =", PlaceHolder3!)
+            print("PlaceHolder2 =", PlaceHolder2!)
+            print("PlaceHolder1 =", PlaceHolder1!)
+            showmeOnce = false
+        }*/
+        
+        for (index, _) in attackSprites.enumerated() {
+            if attackSprites[index].speed != CGFloat(1.0){
+               attackSprites[index].position.x = -10
+            }
+        }
         
         if !bossLeftArmlive && !bossRightArmlive && !bossHeadAlive {
            // bossali
@@ -933,6 +1400,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             bossHolder.run(SKAction.repeat(explosion2, count: 1), completion: {
                 self.bossDead = true
             })
+                
             
             }
         }
@@ -1018,85 +1486,24 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                 enemyWave2exists = false
             }
         }
-        
-        if bossActive{
-            switch RandomNumber { // 0 to 99
-            case 0..<85:
-                //print("test")
-                if bossHeadAlive && headCanAttack {
-                    headCanAttack = false
-                    attackHeadBossM = SKSpriteNode(imageNamed: "redBall")
-                    run(enemyAttackSfx)
-                    attackHeadBossM.setScale(1.3)
-                    attackHeadBossM.zPosition = 3
-                    attackHeadBossM.position = CGPoint(x: bosHeadolder.position.x, y: bosHeadolder.position.y - 18 )
-                    attackHeadBossM.name = "redBall"
-                    attackHeadBossM?.physicsBody = SKPhysicsBody(rectangleOf: (attackHeadBossM?.frame.size)!)
-                    attackHeadBossM?.physicsBody?.affectedByGravity = false;
-                    attackHeadBossM?.physicsBody?.allowsRotation = false;
-                    attackHeadBossM?.physicsBody?.mass = 50.0
-                    attackHeadBossM?.physicsBody?.categoryBitMask = enemyCategory
-                    attackHeadBossM?.physicsBody?.contactTestBitMask = playerCategory | attackPCategory
-                    attackHeadBossM?.physicsBody?.collisionBitMask = playerCategory | attackPCategory
-                    redBallHolder = attackHeadBossM
-                    addChild(attackHeadBossM)
-                    attackHeadBossM.run(moveBallDown)
-                    
-                    attackHeadBossL = SKSpriteNode(imageNamed: "redBeam")
-                    //run(enemyAttackSfx)
-                    attackHeadBossL.setScale(1.3)
-                    attackHeadBossL.zPosition = 3
-                    attackHeadBossL.position = CGPoint(x: bosHeadolder.position.x - 50, y: bosHeadolder.position.y - 15 )
-                    attackHeadBossL.name = "redBallL"
-                    attackHeadBossL?.physicsBody = SKPhysicsBody(rectangleOf: (attackHeadBossL?.frame.size)!)
-                    attackHeadBossL?.physicsBody?.affectedByGravity = false;
-                    attackHeadBossL?.physicsBody?.allowsRotation = false;
-                    attackHeadBossL?.physicsBody?.mass = 50.0
-                    attackHeadBossL?.physicsBody?.categoryBitMask = enemyCategory
-                    attackHeadBossL?.physicsBody?.contactTestBitMask = playerCategory | attackPCategory
-                    attackHeadBossL?.physicsBody?.collisionBitMask = playerCategory | attackPCategory
-                    redBallHolderL = attackHeadBossL
-                   // addChild(attackHeadBossL)
-                    attackHeadBossL.run(moveBallDown)
-                    
-                    attackHeadBossR = SKSpriteNode(imageNamed: "redBeam")
-                    //run(enemyAttackSfx)
-                    attackHeadBossR.setScale(1.3)
-                    attackHeadBossR.position = CGPoint(x: bosHeadolder.position.x + 50, y: bosHeadolder.position.y - 15 )
-                    attackHeadBossR.zPosition = 3
-                    attackHeadBossR.name = "redBallR"
-                    attackHeadBossR?.physicsBody = SKPhysicsBody(rectangleOf: (attackHeadBossR?.frame.size)!)
-                    attackHeadBossR?.physicsBody?.affectedByGravity = false;
-                    attackHeadBossR?.physicsBody?.allowsRotation = false;
-                    attackHeadBossR?.physicsBody?.mass = 50.0
-                    attackHeadBossR?.physicsBody?.categoryBitMask = enemyCategory
-                    attackHeadBossR?.physicsBody?.contactTestBitMask = playerCategory | attackPCategory
-                    attackHeadBossR?.physicsBody?.collisionBitMask = playerCategory | attackPCategory
-                    redBallHolderR = attackHeadBossR
-                   // addChild(attackHeadBossR)
-                    attackHeadBossR.run(moveBallDown)
-                }
-                /*
-            case 5..<20:
-                print("test")
-            case 20..<30:
-                print("test")
-            case 30..<70:
-                print("test")
-            case 70..<85:
-                print("test")*/
-            case 85..<100:
-                //print("test")
-                headCanAttack = true
-            default:
-            print("test")
+        //acato
+        if(enemiesWaveCounter == 4){
+            if difficultyGetter == 3{//change to hard
+            if enemyWave3exists {
+                let sequenceWave3 = SKAction.sequence([moveBossDiagLeftToRightDown, moveBossDiagRightToLeftDown,moveBossDiagLeftToRightDown, moveBossDiagRightToLeftDown])
+                let sequenceWave3x2 = SKAction.sequence([sequenceWave3,sequenceWave3,sequenceWave3])
+                enemy7.run(sequenceWave3x2)
+                enemy8.run(sequenceWave3x2)
+                enemy9.run(sequenceWave3x2)
+                enemyWave3exists = false
             }
-            
+            }
         }
         
         /////**/*/*/*/**/*/*////
-        if(enemiesWaveCounter == 3){
-            if enemyWave3exists {
+        if(enemiesWaveCounter == 5){
+            if difficultyGetter == 1 || difficultyGetter == 2{
+            if enemyWave4exists {
                 bossActive = true
                 backgroundMusic.run(SKAction.stop());
                 backgroundBossMusic.run(SKAction.play());
@@ -1191,8 +1598,188 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                 bossLeftArm.run(sequenceBossLarm)
                 bossRightArm.run(sequenceBossRarm)
                 
-                enemyWave3exists = false
+                enemyWave4exists = false
+              }
             }
+        }
+        
+        if(enemiesWaveCounter == 7){
+            if difficultyGetter == 3{
+            if enemyWave4exists {
+                bossActive = true
+                backgroundMusic.run(SKAction.stop());
+                backgroundBossMusic.run(SKAction.play());
+                
+                var boss: SKSpriteNode!
+                
+                boss = SKSpriteNode(texture: SKTexture(imageNamed: "boss"))
+                boss.setScale(0.2)
+                boss.name = "boss"
+                boss.position = CGPoint(x: screenSize.width * 0.5, y:screenSize.height * 1.2)
+                boss.zPosition = 1
+                boss?.physicsBody = SKPhysicsBody(rectangleOf: (boss?.frame.size)!)
+                boss?.physicsBody?.affectedByGravity = false;
+                boss?.physicsBody?.allowsRotation = false;
+                boss?.physicsBody?.mass = 20.0
+                
+                boss?.physicsBody?.categoryBitMask = wallCategory
+                boss?.physicsBody?.contactTestBitMask = playerCategory
+                boss?.physicsBody?.collisionBitMask = playerCategory
+                bossHolder = boss
+                
+                var bossHead: SKSpriteNode!
+                
+                bossHead = SKSpriteNode(texture: SKTexture(imageNamed: "headBoss"))
+                bossHead.setScale(0.3)
+                bossHead.name = "bossHead"
+                bossHead.position = CGPoint(x: screenSize.width * 0.5, y:screenSize.height * 1.2)
+                bossHead.zPosition = 3
+                bossHead?.physicsBody = SKPhysicsBody(rectangleOf: (bossHead?.frame.size)!)
+                bossHead?.physicsBody?.affectedByGravity = false;
+                bossHead?.physicsBody?.allowsRotation = false;
+                bossHead?.physicsBody?.mass = 20.0
+                
+                bossHead?.physicsBody?.categoryBitMask = enemyCategory
+                bossHead?.physicsBody?.contactTestBitMask = playerCategory | attackPCategory
+                bossHead?.physicsBody?.collisionBitMask = playerCategory | attackPCategory
+                bosHeadolder = bossHead
+                
+                var bossRightArm: SKSpriteNode!
+                
+                bossRightArm = SKSpriteNode(texture: SKTexture(imageNamed: "rightArmBoss"))
+                bossRightArm.setScale(0.4)
+                bossRightArm.name = "bossRightArm"
+                bossRightArm.zPosition = 4
+                bossRightArm.position = CGPoint(x: screenSize.width * 0.8, y:screenSize.height * 1.2)
+                bossRightArm?.physicsBody = SKPhysicsBody(rectangleOf: (bossRightArm?.frame.size)!)
+                bossRightArm?.physicsBody?.affectedByGravity = false;
+                bossRightArm?.physicsBody?.allowsRotation = false;
+                bossRightArm?.physicsBody?.mass = 2.0
+                
+                bossRightArm?.physicsBody?.categoryBitMask = enemyCategory
+                bossRightArm?.physicsBody?.contactTestBitMask = playerCategory | attackPCategory
+                bossRightArm?.physicsBody?.collisionBitMask = playerCategory | attackPCategory
+                bossRightArmHolder = bossRightArm
+                
+                var bossLeftArm: SKSpriteNode!
+                
+                bossLeftArm = SKSpriteNode(texture: SKTexture(imageNamed: "leftArmBoss"))
+                bossLeftArm.setScale(0.4)
+                bossLeftArm.name = "bossLeftArm"
+                bossLeftArm.position = CGPoint(x: screenSize.width * 0.2, y:screenSize.height * 1.2)
+                bossLeftArm.zPosition = 4
+                bossLeftArm?.physicsBody = SKPhysicsBody(rectangleOf: (bossLeftArm?.frame.size)!)
+                bossLeftArm?.physicsBody?.affectedByGravity = false;
+                bossLeftArm?.physicsBody?.allowsRotation = false;
+                bossLeftArm?.physicsBody?.mass = 2.0
+                
+                bossLeftArm?.physicsBody?.categoryBitMask = enemyCategory
+                bossLeftArm?.physicsBody?.contactTestBitMask = playerCategory | attackPCategory
+                bossLeftArm?.physicsBody?.collisionBitMask = playerCategory | attackPCategory
+                bossLeftArmHolder = bossLeftArm
+                
+                let sequenceBoss = SKAction.sequence([moveDownEnemy,moveDownEnemy,moveDownEnemy,moveDownEnemy,moveDownEnemy])
+                let sequenceBossHeadDiamond = SKAction.sequence([moveBossDiagLeftToRightDown,moveBossDiagRightToLeftDown,moveBossDiagRightToLeftUp, moveBossDiagLeftToRightUp])
+                let sequenceBossHeadDiamondInverted = SKAction.sequence([moveBossDiagRightToLeftDown,moveBossDiagLeftToRightDown, moveBossDiagLeftToRightUp,moveBossDiagRightToLeftUp])
+                let sequenceBossHeadDiamondx4 = SKAction.sequence([sequenceBossHeadDiamondInverted, sequenceBossHeadDiamond,sequenceBossHeadDiamond,sequenceBossHeadDiamond, sequenceBossHeadDiamond])
+                let sequenceBossHead = SKAction.sequence([moveDownEnemy,moveDownEnemy,moveDownEnemy,moveDownEnemy, sequenceBossHeadDiamond,sequenceBossHeadDiamondx4,sequenceBossHeadDiamondx4,sequenceBossHeadDiamondx4,sequenceBossHeadDiamondx4,sequenceBossHeadDiamondx4,sequenceBossHeadDiamondx4,sequenceBossHeadDiamondx4,sequenceBossHeadDiamondx4,sequenceBossHeadDiamondx4,sequenceBossHeadDiamondx4])
+                
+                let sequenceLeftToRight = SKAction.sequence([moveBossArmRight, moveBossArmLeft,moveBossArmRight, moveBossArmLeft,moveBossArmRight, moveBossArmLeft,moveBossArmRight, moveBossArmLeft,moveBossArmRight, moveBossArmLeft,moveBossArmRight, moveBossArmLeft,moveBossArmRight, moveBossArmLeft])
+                let sequenceLeftToRightx2 = SKAction.sequence([sequenceLeftToRight,sequenceLeftToRight,sequenceLeftToRight,sequenceLeftToRight,sequenceLeftToRight,sequenceLeftToRight,sequenceLeftToRight,sequenceLeftToRight,sequenceLeftToRight,sequenceLeftToRight,sequenceLeftToRight,sequenceLeftToRight,sequenceLeftToRight,sequenceLeftToRight,sequenceLeftToRight,sequenceLeftToRight])
+                
+                let sequenceBossRarm = SKAction.sequence([moveDownEnemy,moveDownEnemy,moveDownEnemy,moveDownEnemy,moveDownEnemy, sequenceLeftToRightx2])
+                let sequenceBossLarm = SKAction.sequence([moveDownEnemy,moveDownEnemy,moveDownEnemy,moveDownEnemy,moveDownEnemy, moveBossArmLeft, sequenceLeftToRightx2])
+                
+                addChild(boss)
+                addChild(bossHead)
+                addChild(bossRightArm)
+                addChild(bossLeftArm)
+                
+                boss.run(sequenceBoss)
+                bossHead.run(sequenceBossHead)
+                bossLeftArm.run(sequenceBossLarm)
+                bossRightArm.run(sequenceBossRarm)
+                
+                enemyWave4exists = false
+                }
+            }
+        }
+        
+        if bossActive{
+            switch RandomNumber { // 0 to 99
+            case 0..<85:
+                //print("test")
+                if bossHeadAlive && headCanAttack {
+                    headCanAttack = false
+                    attackHeadBossM = SKSpriteNode(imageNamed: "redBall")
+                    run(enemyAttackSfx)
+                    attackHeadBossM.setScale(1.3)
+                    attackHeadBossM.zPosition = 3
+                    attackHeadBossM.position = CGPoint(x: bosHeadolder.position.x, y: bosHeadolder.position.y - 18 )
+                    attackHeadBossM.name = "redBall"
+                    attackHeadBossM?.physicsBody = SKPhysicsBody(rectangleOf: (attackHeadBossM?.frame.size)!)
+                    attackHeadBossM?.physicsBody?.affectedByGravity = false;
+                    attackHeadBossM?.physicsBody?.allowsRotation = false;
+                    attackHeadBossM?.physicsBody?.mass = 50.0
+                    attackHeadBossM?.physicsBody?.categoryBitMask = enemyCategory
+                    attackHeadBossM?.physicsBody?.contactTestBitMask = playerCategory | attackPCategory
+                    attackHeadBossM?.physicsBody?.collisionBitMask = playerCategory | attackPCategory
+                    redBallHolder = attackHeadBossM
+                    addChild(attackHeadBossM)
+                    attackHeadBossM.run(moveBallDown)
+                    
+                    if difficultyGetter == 3 {
+                        attackHeadBossL = SKSpriteNode(imageNamed: "redBeam")
+                        //run(enemyAttackSfx)
+                        attackHeadBossL.setScale(1.3)
+                        attackHeadBossL.zPosition = 3
+                        attackHeadBossL.position = CGPoint(x: bosHeadolder.position.x - 50, y: bosHeadolder.position.y - 15 )
+                        attackHeadBossL.name = "redBallL"
+                        attackHeadBossL?.physicsBody = SKPhysicsBody(rectangleOf: (attackHeadBossL?.frame.size)!)
+                        attackHeadBossL?.physicsBody?.affectedByGravity = false;
+                        attackHeadBossL?.physicsBody?.allowsRotation = false;
+                        attackHeadBossL?.physicsBody?.mass = 50.0
+                        attackHeadBossL?.physicsBody?.categoryBitMask = enemyCategory
+                        attackHeadBossL?.physicsBody?.contactTestBitMask = playerCategory | attackPCategory
+                        attackHeadBossL?.physicsBody?.collisionBitMask = playerCategory | attackPCategory
+                        redBallHolderL = attackHeadBossL
+                        addChild(attackHeadBossL)
+                        attackHeadBossL.run(moveBallDown)
+                        
+                        attackHeadBossR = SKSpriteNode(imageNamed: "redBeam")
+                        //run(enemyAttackSfx)
+                        attackHeadBossR.setScale(1.3)
+                        attackHeadBossR.position = CGPoint(x: bosHeadolder.position.x + 50, y: bosHeadolder.position.y - 15 )
+                        attackHeadBossR.zPosition = 3
+                        attackHeadBossR.name = "redBallR"
+                        attackHeadBossR?.physicsBody = SKPhysicsBody(rectangleOf: (attackHeadBossR?.frame.size)!)
+                        attackHeadBossR?.physicsBody?.affectedByGravity = false;
+                        attackHeadBossR?.physicsBody?.allowsRotation = false;
+                        attackHeadBossR?.physicsBody?.mass = 50.0
+                        attackHeadBossR?.physicsBody?.categoryBitMask = enemyCategory
+                        attackHeadBossR?.physicsBody?.contactTestBitMask = playerCategory | attackPCategory
+                        attackHeadBossR?.physicsBody?.collisionBitMask = playerCategory | attackPCategory
+                        redBallHolderR = attackHeadBossR
+                        addChild(attackHeadBossR)
+                        attackHeadBossR.run(moveBallDown)
+                    }
+                }
+                /*
+                 case 5..<20:
+                 print("test")
+                 case 20..<30:
+                 print("test")
+                 case 30..<70:
+                 print("test")
+                 case 70..<85:
+                 print("test")*/
+            case 85..<100:
+                //print("test")
+                headCanAttack = true
+            default:
+                print("test")
+            }
+            
         }
         
         if powerUp3Holder != nil{
@@ -1205,23 +1792,10 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         {
             if revived1 {
                 playerLife3.removeFromParent()
-               /* PlayerSprite = SKSpriteNode(imageNamed: "spacecraft")
-                PlayerSprite?.name = "spacecraft1"
-                */
-                PlayerSprite?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: screenSize.height * 0.2)
-                /*PlayerSprite?.zPosition = 1
-                PlayerSprite?.setScale(0.6)
-                PlayerSprite?.physicsBody = SKPhysicsBody(rectangleOf: (PlayerSprite?.frame.size)!)
-                PlayerSprite?.physicsBody?.affectedByGravity = false;
-                PlayerSprite?.physicsBody?.allowsRotation = false;
-                PlayerSprite?.physicsBody?.mass = 1.0
                 
-                PlayerSprite?.physicsBody?.categoryBitMask = playerCategory
-                PlayerSprite?.physicsBody?.contactTestBitMask = wallCategory / attackECategory
-                PlayerSprite?.physicsBody?.collisionBitMask = attackECategory | enemyCategory | wallCategory | powerUpCategory
-                */
+                PlayerSprite?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: screenSize.height * 0.1)
+               // PlayerSprite = SKSpriteNode(imageNamed: "spacecraft")
                 PlayerSprite.isHidden = false
-                //addChild(PlayerSprite)
                 revived1 = false
             }
         }
@@ -1230,8 +1804,8 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             if revived2 {
                 playerLife2.removeFromParent()
                 
-                PlayerSprite?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: screenSize.height * 0.2)
-           
+                PlayerSprite?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: screenSize.height * 0.1)
+              //  PlayerSprite = SKSpriteNode(imageNamed: "spacecraft")
                 PlayerSprite.isHidden = false
                 revived2 = false
             }
@@ -1241,8 +1815,8 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             if revived3 {
                 playerLife1.removeFromParent()
                 
-                PlayerSprite?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: screenSize.height * 0.2)
-                
+                PlayerSprite?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: screenSize.height * 0.1)
+                //PlayerSprite = SKSpriteNode(imageNamed: "spacecraft")
                 PlayerSprite.isHidden = false
                 revived3 = false
             }
@@ -1298,6 +1872,11 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     @objc func changeSceneMenu(){ //change scene after 0.6 sec
         let reveal = SKTransition.reveal(with: .left, duration: 0.6)
         let newScene = MenuScene(size:self.size)
+        newScene.scoreGetter = Int(self.score);
+        newScene.difficultyGetter = Int?(self.difficultyGetter!);
+        newScene.PlaceHolder1 = Int?(self.PlaceHolder1!)
+        newScene.PlaceHolder2 = Int?(self.PlaceHolder2!)
+        newScene.PlaceHolder3 = Int?(self.PlaceHolder3!)   
         self.view?.presentScene(newScene, transition: reveal)
     }
     

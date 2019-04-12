@@ -14,14 +14,12 @@ class GameoverScene: SKScene {
     var message2: SKLabelNode!
     var message3: SKLabelNode!
     
-    
+    var scoreGetter: Int?
+    var difficultyGetter: Int?
     var PlaceHolder1: Int?
     var PlaceHolder2: Int?
     var PlaceHolder3: Int?    
     
-    var highscoreValue1: SKLabelNode!
-    var highscoreValue2: SKLabelNode!
-    var highscoreValue3: SKLabelNode!
     
     let selectionSound = SKAudioNode(fileNamed: "/Sfx/select.wav")
     let backgroundMusic = SKAudioNode(fileNamed: "/Music/Flying_Force_Combat.mp3")
@@ -105,6 +103,11 @@ class GameoverScene: SKScene {
     @objc func changeSceneMenu(){ //change scene after 0.6 sec
         let reveal = SKTransition.reveal(with: .left, duration: 0.6)
         let newScene = MenuScene(size:self.size)
+        newScene.scoreGetter = Int?(self.scoreGetter!)
+        newScene.difficultyGetter = Int?(self.difficultyGetter!)
+        newScene.PlaceHolder1 = Int?(self.PlaceHolder1!)
+        newScene.PlaceHolder2 = Int?(self.PlaceHolder2!)
+        newScene.PlaceHolder3 = Int?(self.PlaceHolder3!)   
         self.view?.presentScene(newScene, transition: reveal)
     }
 }

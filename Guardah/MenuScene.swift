@@ -10,7 +10,7 @@ import Foundation
 import SpriteKit
 
 class MenuScene: SKScene {
-    var scoreGetter: Int?
+
     
     var startButton: SKSpriteNode!
     var optionsButton: SKSpriteNode!
@@ -20,6 +20,8 @@ class MenuScene: SKScene {
     var spriteLogo: SKSpriteNode!
     var fireParticle: SKEmitterNode!
     
+    var scoreGetter: Int?
+    var difficultyGetter: Int?
     var PlaceHolder1: Int?
     var PlaceHolder2: Int?
     var PlaceHolder3: Int?
@@ -30,9 +32,17 @@ class MenuScene: SKScene {
     let selectionSound = SKAudioNode(fileNamed: "/Sfx/select.wav")
     let backgroundMusic = SKAudioNode(fileNamed: "/Music/Flying_Force_Combat.mp3")
     
+    var showmeOnce = true
+    
     override init(size: CGSize) {
         super.init(size: size)
         
+        //score
+        PlaceHolder1 = 1000
+        PlaceHolder2 = 500
+        PlaceHolder3 = 100
+        scoreGetter = 90
+        difficultyGetter = 2
         //print(scoreGetter)
         selectionSound.autoplayLooped = false;
         
@@ -75,7 +85,7 @@ class MenuScene: SKScene {
         
         spriteLogo = SKSpriteNode(imageNamed: "spacecraft")
         spriteLogo?.name = "spacecraft1"
-        spriteLogo?.setScale(0.08)
+        spriteLogo?.setScale(0.8)
         spriteLogo?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2+220)
         spriteLogo?.zPosition = 2
         
@@ -92,11 +102,23 @@ class MenuScene: SKScene {
         addChild(selectionSound)
         addChild(backgroundMusic)
         
+        
+        
     }
     
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func update(_ currentTime: TimeInterval) {
+        if showmeOnce {
+            print("scoreGetter =", scoreGetter!)
+            print("PlaceHolder3 =", PlaceHolder3!)
+            print("PlaceHolder2 =", PlaceHolder2!)
+            print("PlaceHolder1 =", PlaceHolder1!)
+            showmeOnce = false
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -121,6 +143,7 @@ class MenuScene: SKScene {
             if node.name == "highscoreBtn" {
                 if node.contains(t.location(in:self))// do whatever here
                 {
+                    print("difficulty on ", self.difficultyGetter!)
                    self.selectionSound.run(SKAction.play());
                     print("the value in main menu of scoreGetter", self.scoreGetter!)
                    self.perform(#selector(self.changeSceneHighScore), with: nil, afterDelay: 0.6)
@@ -134,12 +157,22 @@ class MenuScene: SKScene {
     @objc func changeSceneGame(){ //change scene after 1 sec
         let reveal = SKTransition.reveal(with: .up, duration: 0.6)
         let newScene = GameScene(size:self.size)
+        newScene.scoreGetter = Int?(self.scoreGetter!)
+        newScene.difficultyGetter = Int?(self.difficultyGetter!)
+        newScene.PlaceHolder1 = Int?(self.PlaceHolder1!)
+        newScene.PlaceHolder2 = Int?(self.PlaceHolder2!)
+        newScene.PlaceHolder3 = Int?(self.PlaceHolder3!)
         self.view?.presentScene(newScene, transition: reveal)
     }
     
     @objc func changeSceneOptions(){ //change scene after 1 sec
         let reveal = SKTransition.reveal(with: .right, duration: 0.6)
         let newScene = OptionsScene(size:self.size)
+        newScene.scoreGetter = Int?(self.scoreGetter!)
+        newScene.difficultyGetter = Int?(self.difficultyGetter!)
+        newScene.PlaceHolder1 = Int?(self.PlaceHolder1!)
+        newScene.PlaceHolder2 = Int?(self.PlaceHolder2!)
+        newScene.PlaceHolder3 = Int?(self.PlaceHolder3!)
         self.view?.presentScene(newScene, transition: reveal)
     }
     
@@ -147,9 +180,10 @@ class MenuScene: SKScene {
         let reveal = SKTransition.reveal(with: .right, duration: 0.6)
         let newScene = HighscoreScene(size:self.size)
         newScene.scoreGetter = Int?(self.scoreGetter!)
+        newScene.difficultyGetter = Int?(self.difficultyGetter!)
         newScene.PlaceHolder1 = Int?(self.PlaceHolder1!)
         newScene.PlaceHolder2 = Int?(self.PlaceHolder2!)
-        newScene.PlaceHolder3 = Int?(self.PlaceHolder3!)        
+        newScene.PlaceHolder3 = Int?(self.PlaceHolder3!)
         
         self.view?.presentScene(newScene, transition: reveal)
     }

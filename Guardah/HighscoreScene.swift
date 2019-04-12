@@ -4,6 +4,8 @@ import SpriteKit
 
 class HighscoreScene: SKScene {
     
+    var showmeOnce = true
+    
     var scoreGetter: Int?
     
     var background: SKSpriteNode!
@@ -23,6 +25,7 @@ class HighscoreScene: SKScene {
     var higherThan2 = false
     var higherThan3 = false
     
+    var difficultyGetter: Int?
     var PlaceHolder1: Int?
     var PlaceHolder2: Int?
     var PlaceHolder3: Int?
@@ -91,15 +94,15 @@ class HighscoreScene: SKScene {
         //print(scoreGetter ?? 90)
         
         if !passedOnce {
-            print("IM HERE ONCE")
-            if scoreGetter ?? 90 > Int(highscoreValue1.text!)!{
+           // print("IM HERE ONCE")
+            if scoreGetter ?? 90 > Int(PlaceHolder1!){
                 print("IM HIGHER THAN 10000")
                 highscoreValue1.text = "\(scoreGetter!)"
                 PlaceHolder1 = scoreGetter
                 higherThan1 = true
             }
             
-            if scoreGetter ?? 90 > Int(highscoreValue2.text!)! && !higherThan1{
+            if scoreGetter ?? 90 > Int(PlaceHolder2!) && !higherThan1{
                 print("IM HIGHER THAN 1000")
                 highscoreValue2.text = "\(scoreGetter!)"
                 
@@ -108,14 +111,26 @@ class HighscoreScene: SKScene {
                 higherThan2 = true
             }
             
-            if scoreGetter ?? 90 > Int(highscoreValue3.text!)! && !higherThan1 && !higherThan2{
-                print("IM HIGHER THAN 1000")
+            if scoreGetter ?? 90 > Int(PlaceHolder3!) && !higherThan1 && !higherThan2{
+                print("IM HIGHER THAN 100")
                 highscoreValue3.text = "\(scoreGetter!)"
                 PlaceHolder3 = scoreGetter
                 higherThan3 = true
             }
             
+            highscoreValue1.text = "\(PlaceHolder1!)"
+            highscoreValue2.text = "\(PlaceHolder2!)"
+            highscoreValue3.text = "\(PlaceHolder3!)"
+            
             passedOnce = true
+        }
+        
+        if showmeOnce {
+            print("scoreGetter =", scoreGetter!)
+            print("PlaceHolder3 =", PlaceHolder3!)
+            print("PlaceHolder2 =", PlaceHolder2!)
+            print("PlaceHolder1 =", PlaceHolder1!)
+            showmeOnce = false
         }
         
     }
@@ -142,6 +157,7 @@ class HighscoreScene: SKScene {
         let reveal = SKTransition.reveal(with: .left, duration: 0.6)
         let newScene = MenuScene(size:self.size)
         newScene.scoreGetter = Int?(self.scoreGetter!)
+        newScene.difficultyGetter = Int?(self.difficultyGetter!)
         newScene.PlaceHolder1 = Int?(self.PlaceHolder1!)
         newScene.PlaceHolder2 = Int?(self.PlaceHolder2!)
         newScene.PlaceHolder3 = Int?(self.PlaceHolder3!)

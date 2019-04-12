@@ -13,6 +13,7 @@ class WinScene: SKScene {
     var message2: SKLabelNode!
     var message3: SKLabelNode!
     var scoreGetter: Int?
+    var difficultyGetter: Int?
     
     var PlaceHolder1: Int?
     var PlaceHolder2: Int?

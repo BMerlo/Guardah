@@ -16,8 +16,8 @@ class Singleton {
 }
 
 class GameViewController: UIViewController {
-   // var scene: HighscoreScene!
-    var scene: GameScene!
+    var scene: MenuScene!
+    //var scene: GameScene!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,9 +25,9 @@ class GameViewController: UIViewController {
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
             // Set the scale mode to scale to fit the window
-            //scene = MenuScene(size: self.view.frame.size)
+            scene = MenuScene(size: self.view.frame.size)
             //scene = HighscoreScene(size: self.view.frame.size)
-            scene = GameScene(size: self.view.frame.size)
+            //scene = GameScene(size: self.view.frame.size)
 
             scene.scaleMode = .aspectFill
             
