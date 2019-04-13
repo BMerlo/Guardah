@@ -12,7 +12,6 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     
     var showmeOnce = true
     
-    
     var scoreGetter: Int?
     var difficultyGetter: Int?
     
@@ -409,17 +408,17 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         
         playerLife1 = SKSpriteNode(imageNamed: "spacecraft")
         playerLife1?.setScale(0.3)
-        playerLife1?.position = CGPoint(x: screenSize.width * 0.02, y:screenSize.height * 0.96)
+        playerLife1?.position = CGPoint(x: screenSize.width * 0.04, y:screenSize.height * 0.96)
         playerLife1?.zPosition = 3
         
         playerLife2 = SKSpriteNode(imageNamed: "spacecraft")
         playerLife2?.setScale(0.3)
-        playerLife2?.position = CGPoint(x: screenSize.width * 0.02, y:screenSize.height * 0.92)
+        playerLife2?.position = CGPoint(x: screenSize.width * 0.04, y:screenSize.height * 0.92)
         playerLife2?.zPosition = 3
         
         playerLife3 = SKSpriteNode(imageNamed: "spacecraft")
         playerLife3?.setScale(0.3)
-        playerLife3?.position = CGPoint(x: screenSize.width * 0.02, y:screenSize.height * 0.88)
+        playerLife3?.position = CGPoint(x: screenSize.width * 0.04, y:screenSize.height * 0.88)
         playerLife3?.zPosition = 3
         
         PlayerSprite = SKSpriteNode(imageNamed: "spacecraft")
@@ -1378,6 +1377,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
        
+        
         ScoreLabel.text = "\(score)"
         /*
         if showmeOnce {
@@ -1791,8 +1791,9 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         if playerLives == 2
         {
             if revived1 {
+                print("player died once")
                 playerLife3.removeFromParent()
-                
+               // PlayerSprite = SKSpriteNode(imageNamed: "spacecraft")
                 PlayerSprite?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: screenSize.height * 0.1)
                // PlayerSprite = SKSpriteNode(imageNamed: "spacecraft")
                 PlayerSprite.isHidden = false

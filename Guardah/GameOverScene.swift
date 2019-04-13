@@ -41,26 +41,29 @@ class GameoverScene: SKScene {
         
         lossNameLabel = SKLabelNode(fontNamed: "Chalkduster")
         lossNameLabel.text = "Failed!"
-        lossNameLabel.horizontalAlignmentMode = .right
-        lossNameLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2 + 70, y: UIScreen.main.bounds.height / 2+160)
+        lossNameLabel.horizontalAlignmentMode = .center
+        lossNameLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2+160)
         lossNameLabel.zPosition = 1
         
         message1 = SKLabelNode(fontNamed: "Chalkduster")
         message1.text = "You have failed"
-        message1.horizontalAlignmentMode = .right
-        message1.position = CGPoint(x: UIScreen.main.bounds.width / 2+150, y: UIScreen.main.bounds.height / 2+60)
+        message1.fontSize = 25
+        message1.horizontalAlignmentMode = .center
+        message1.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2+60)
         message1.zPosition = 1
         
         message2 = SKLabelNode(fontNamed: "Chalkduster")
         message2.text = "in your mission"
-        message2.horizontalAlignmentMode = .right
-        message2.position = CGPoint(x: UIScreen.main.bounds.width / 2+150, y: UIScreen.main.bounds.height / 2)
+        message2.horizontalAlignmentMode = .center
+        message2.fontSize = 25
+        message2.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
         message2.zPosition = 1
         
         message3 = SKLabelNode(fontNamed: "Chalkduster")
         message3.text = "to defeat Bohr-iz"
-        message3.horizontalAlignmentMode = .right
-        message3.position = CGPoint(x: UIScreen.main.bounds.width / 2+170, y: UIScreen.main.bounds.height / 2-60)
+        message3.fontSize = 25
+        message3.horizontalAlignmentMode = .center
+        message3.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2-60)
         message3.zPosition = 1
         
         

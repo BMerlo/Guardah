@@ -43,26 +43,29 @@ class WinScene: SKScene {
         
         congratsNameLabel = SKLabelNode(fontNamed: "Chalkduster")
         congratsNameLabel.text = "Congratulations!"
-        congratsNameLabel.horizontalAlignmentMode = .right
-        congratsNameLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2 + 160, y: UIScreen.main.bounds.height / 2+160)
+        congratsNameLabel.horizontalAlignmentMode = .center
+        congratsNameLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2+160)
         congratsNameLabel.zPosition = 1
         
         message1 = SKLabelNode(fontNamed: "Chalkduster")
         message1.text = "You have completed"
-        message1.horizontalAlignmentMode = .right
-        message1.position = CGPoint(x: UIScreen.main.bounds.width / 2+180, y: UIScreen.main.bounds.height / 2+60)
+        message1.horizontalAlignmentMode = .center
+        message1.fontSize = 23
+        message1.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2+60)
         message1.zPosition = 1
         
         message2 = SKLabelNode(fontNamed: "Chalkduster")
         message2.text = "your mission"
-        message2.horizontalAlignmentMode = .right
-        message2.position = CGPoint(x: UIScreen.main.bounds.width / 2+120, y: UIScreen.main.bounds.height / 2)
+        message2.fontSize = 23
+        message2.horizontalAlignmentMode = .center
+        message2.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
         message2.zPosition = 1
         
         message3 = SKLabelNode(fontNamed: "Chalkduster")
         message3.text = "to defeat Bohr-iz"
-        message3.horizontalAlignmentMode = .right
-        message3.position = CGPoint(x: UIScreen.main.bounds.width / 2+170, y: UIScreen.main.bounds.height / 2-60)
+        message3.fontSize = 23
+        message3.horizontalAlignmentMode = .center
+        message3.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2-60)
         message3.zPosition = 1
         
         
