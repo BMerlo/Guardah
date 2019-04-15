@@ -60,6 +60,10 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var explosion2Atlas: SKTextureAtlas! //Spritesheet //1
     var explosion2Frames: [SKTexture]! //frames //2
     var explosion2: SKAction! //Animation //3
+    //player
+    var playerIdleAtlas: SKTextureAtlas! //Spritesheet //1
+    var playerIdleFrames: [SKTexture]! //frames //2
+    var playerIdle: SKAction! //Animation //3
     
     var score = 0
     let ScoreLabel = SKLabelNode(fontNamed:"Helvetica")
@@ -143,7 +147,6 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var enemy7: SKSpriteNode!
     var enemy8: SKSpriteNode!
     var enemy9: SKSpriteNode!
-    
     
     //highscores
     var PlaceHolder1: Int?
@@ -379,6 +382,10 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         explosion2Frames = [] //2. Initialize empty texture array
         let explosion2Images = explosion2Atlas.textureNames.count-1//3. count how many frames inside atlas (if this does not work do
         
+        playerIdleAtlas = SKTextureAtlas(named: "playerIdle.1") //0
+        playerIdleFrames = [] //2. Initialize empty texture array
+        let playerIdleImages = playerIdleAtlas.textureNames.count-1//3. count how many frames inside atlas (if this does not work do
+        
         //1
         for i in 0...explosion1Images {
             let texture = "explosion-\(i)" //grab each frame in atlas
@@ -391,6 +398,12 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             explosion2Frames.append(explosion2Atlas.textureNamed(texture))
         }//add frame to texture array
         explosion2 = SKAction.animate(with: explosion2Frames, timePerFrame: 0.3, resize: true, restore: true)
+        
+        for i in 0...playerIdleImages {
+            let texture = "spacecraft-\(i)" //grab each frame in atlas
+            playerIdleFrames.append(playerIdleAtlas.textureNamed(texture))
+        }//add frame to texture array
+        playerIdle = SKAction.animate(with: playerIdleFrames, timePerFrame: 0.3, resize: true, restore: true)
         
         
         ScoreLabel.text = "SCORE:   \(score)"
@@ -464,6 +477,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         addChild(fireButton)
         
         addChild(backgroundMusic)
+        PlayerSprite.run(SKAction.repeatForever(playerIdle))
         
     }
     
